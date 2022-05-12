@@ -70,13 +70,16 @@ class Player extends Entity
 
 			if(vectorLength([this.dir[0], this.dir[1], 0]) == 0){
 
-				this.sprite.pos = [0,0];
+				this.sprite.pos = [0,0];	this.sprite.size = [32,32]
 			}else{
-				this.sprite.pos = [0,32];
+				this.sprite.pos = [0,32];	this.sprite.size = [32,32]
 			}
 		}
 		
-		this.timer -= dt * vectorLength([this.dir[0]*this.speed, this.dir[1]*this.speed, 0]);
+		var tm = 128;
+		if(!this.isJumping)
+			tm = vectorLength([this.dir[0]*this.speed, this.dir[1]*this.speed, 0]);
+		this.timer -= dt * tm;
 		if(this.timer<=0){
 			this.curFrame = (this.curFrame+1)%this.curAnim.length;
 			this.sprite.frames = [this.curAnim[this.curFrame]];
@@ -105,7 +108,17 @@ class Player extends Entity
 				this.actionTimer = 0.8;
 				
 				this.isJumping = true;
-				this.sprite.pos = [0,64];
+				this.sprite.pos = [0,64];	this.sprite.size = [32,32]
+				
+			}
+
+			if(input.isDown('e') && !this.isJumping){
+				this.actionTimer = 0.8;
+				
+				this.isJumping = true;
+				this.sprite.pos = [0,96];	this.sprite.size = [48,32]
+				
+				this.dir = [0,0,this.dir[2]];
 			}
 
 			
