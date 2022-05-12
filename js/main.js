@@ -1,0 +1,226 @@
+// =========================================================================
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+//canvas.style.width = "1024px";
+//canvas.style.height = "512px";
+canvas.width = 512;
+canvas.height = 256;
+
+document.body.appendChild(canvas);
+
+
+var fontSize = 16;
+ctx.font = fontSize+'px pixelfont';
+ctx.imageSmoothingEnabled = false;
+//ctx.filter = "blur(0px)"
+
+
+var camera = [0,0];
+
+
+
+
+var requestAnimFrame = (function(){
+    return window.requestAnimationFrame       ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        window.oRequestAnimationFrame      ||
+        window.msRequestAnimationFrame     ||
+        function(callback){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
+
+
+
+var lastTime;
+var dt;
+function main() {
+    var now = Date.now();
+    dt = (now - lastTime) / 1000.0;
+
+    update(dt);
+    render();
+	
+	resetInput();
+	TakeFPS(dt);
+	
+	lastTime = now;
+    requestAnimFrame(main);
+};
+
+//FPS CHECKER
+var fps   = 0;
+var accum   = 0;
+var frames  = 0;
+var timeleft = 0.5;
+
+function TakeFPS(dt)
+{
+	timeleft -= dt;
+	accum += 1/dt;
+	++frames;
+	
+	if( timeleft <= 0.0 ){
+		fps = accum/frames;
+
+		timeleft = 0.5;
+		accum = 0.0;
+		frames = 0;
+	}
+	
+	//SHOW FPS
+	DrawBox(0,canvas.height,60,15, "rgba(0, 0, 0, 0.5)");
+	DrawText(5, canvas.height-3, 'FPS ' + fps.toFixed(2), "rgba(160, 160, 160, 1)");
+}
+
+
+
+//^^^^^^^^^^^^^^^^^^^^^^^
+//^^NOTHING INTERESTING^^
+//^^^^^^^^^^^^^^^^^^^^^^^
+
+var gameTime = 0;
+
+//INIT
+function init() {
+  
+	level.start();
+	
+    lastTime = Date.now();
+    main();
+}
+
+
+
+
+//INIT RESOURCES
+resources.load([
+	'res/tiles.png',
+	'res/gui.png',
+	'res/player.png',
+	'res/skeleton.png',
+	'res/misc.png',
+]);
+resources.onReady(init);
+
+//COROUTINES
+/*var clock = coroutine(function*() 
+{
+		while (true) {
+			yield;
+			console.log('Tick!');
+			yield;
+			console.log('Tock!');
+		}
+	});
+	
+function coroutine(f) 
+{
+    var o = f(); // instantiate the coroutine
+    o.next(); // execute until the first yield
+    return function(x) {
+        o.next(x);
+    }
+}
+clock();
+*/
+
+//UPDATE
+function update(dt) {
+    gameTime += dt;
+		
+	level.update(dt);
+};
+
+
+
+
+
+
+//RENDER
+function render(){
+	DrawBox(0,canvas.height, canvas.width, canvas.height, "rgba(0, 0, 0, 1)");	//clear
+
+    // Render 
+	level.render(ctx);
+	
+	pushToRender();
+
+	onGUI(ctx);
+}
+
+
+function onGUI(ctx){
+	
+	level.onGUI(ctx);
+
+	//DrawUI();
+	
+	//entity info
+	for(var i=0; i<entities.length; i++){
+		
+		/*var e = entities[i];
+		if(pointInBox(mouseWorld, e.pos, 16)){
+			var x = mouse[0] + 20;
+			var y = mouse[1] + 20;
+			
+			
+			DrawBox(x, y, 100, 100, "rgba(0, 0, 0, 0.5)");
+			DrawText(x+5, y-10, 'Name: '+e.name, "rgba(160, 160, 160, 1)");
+			DrawText(x+5, y-40, 'Speed: '+e.speed, "rgba(128, 128, 128, 1)");
+			DrawText(x+5, y-50, 'Selected['+e.selected+']', "rgba(128, 128, 128, 1)");
+			
+			DrawText(x+5, y-60, 'type['+(e.constructor.name)+']', "rgba(128, 128, 128, 1)");
+				
+			if(e instanceof Human){
+				DrawText(x+5, y-30, 'Health: '+e.health, "rgba(255, 128, 128, 1)");
+			}
+				
+			if(e instanceof Projectile){
+				DrawText(x+5, y-90, 'lifetime: '+(e.lifeTime).toFixed(2)+'', "rgba(128, 128, 128, 1)");
+			}
+			
+			DrawRect(e.pos[0]-10-camera[0], e.pos[1]+11-camera[1], 20, 20, colorStr(256,128,0,(mousePress0)? 0.8 : 0.5) );
+			break;
+		}*/
+	}
+	
+	
+	
+}
+
+
+//SORTING RENDER
+var renderData = [];
+
+function pushToRender(){
+	renderData.sort(function(a, b) {
+	
+		if((a==null || a.sprite==null) && (b==null || b.sprite==null) )		return;
+		else if(a==null || a.sprite==null)		return parseFloat(b.sprite.depth);
+		else if(b==null || b.sprite==null) 		return parseFloat(a.sprite.depth)
+		else
+			return parseFloat(a.sprite.depth) - parseFloat(b.sprite.depth);
+		//return parseFloat(a.pos[1]) - parseFloat(b.pos[1]);
+		
+	});
+	
+	for(var i=0; i<renderData.length; i++){
+		renderEntity(renderData[i]);
+	}
+	renderData = [];
+}
+
+function renderEntity(e){
+	if(e==null || e.sprite==null) return;
+
+	ctx.save();
+	ctx.translate(Math.round(e.pos[0]+e.sprite.offset[0]-camera[0]), canvas.height-Math.round((e.pos[1]+e.pos[2])+e.sprite.offset[1]-camera[1]));
+
+	e.sprite.render(ctx);
+	ctx.restore();
+}
+
