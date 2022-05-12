@@ -1,2 +1,2 @@
 # Hack-n-Slash-Game
-[WIP] hack-n-slash game
+[WIP] Browser hack-n-slash game
