@@ -5,8 +5,10 @@ var ctx = canvas.getContext("2d");
 
 //canvas.style.width = "1024px";
 //canvas.style.height = "512px";
-canvas.width = 512;
-canvas.height = 256;
+
+canvas.width = 1024-256;
+canvas.height = 512-128;
+
 
 document.body.appendChild(canvas);
 
@@ -100,6 +102,7 @@ function init() {
 resources.load([
 	'res/tiles.png',
 	'res/gui.png',
+	'res/font.png',
 	'res/player.png',
 	'res/skeleton.png',
 	'res/misc.png',
@@ -202,8 +205,10 @@ function pushToRender(){
 		if((a==null || a.sprite==null) && (b==null || b.sprite==null) )		return;
 		else if(a==null || a.sprite==null)		return parseFloat(b.sprite.depth);
 		else if(b==null || b.sprite==null) 		return parseFloat(a.sprite.depth)
-		else
-			return parseFloat(a.sprite.depth) - parseFloat(b.sprite.depth);
+		
+		if(a.depth==null)	a.depth = 0;
+		if(b.depth==null)	b.depth = 0;
+		return (parseFloat(a.depth) - parseFloat(b.depth));	// + (parseFloat(a.pos[1]*10) - parseFloat(b.pos[1]*10))
 		//return parseFloat(a.pos[1]) - parseFloat(b.pos[1]);
 		
 	});

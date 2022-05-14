@@ -1,4 +1,28 @@
 
+TILE_WIDTH = 32;
+TILE_HEIGHT = 16;
+
+TILE_WIDTH_HALF = TILE_WIDTH/2;
+TILE_HEIGHT_HALF = TILE_HEIGHT/2;
+
+function ScreenToIsometric(pos) {
+	var x = pos[0] + camera[0];
+	var y = pos[1] + camera[1];
+	var xx = x / TILE_WIDTH + y / TILE_HEIGHT; //(mx / TILE_WIDTH_HALF + my / TILE_HEIGHT_HALF) /2;
+	var yy = y / TILE_HEIGHT - x / TILE_WIDTH; //(my / TILE_HEIGHT_HALF - (mx / TILE_WIDTH_HALF)) /2;
+    return [xx,yy,pos[2]];
+}
+
+function FromIsometricToScreen(pos) {
+    return pos;
+}
+
+function WorldToIsometric(pos) {
+	var nPos = [(pos[0] - pos[1]) * TILE_WIDTH_HALF, (pos[0] + pos[1]) * TILE_HEIGHT_HALF, pos[2]];
+    return nPos;
+}
+
+
 
 
 var tilemap = {
@@ -7,12 +31,12 @@ var tilemap = {
 	data: [,],
 	
 	sprites: [
-		new Sprite('res/tiles.png', [0, 0]  , [32, 16],0,[0], -300),	 	//floor 0
-		new Sprite('res/tiles.png', [0, 16]  , [32, 16],0,[0], -300), 	//floor 1
+		new Sprite('res/tiles.png', [0, 0], [32, 16]),	 	//floor 0
+		new Sprite('res/tiles.png', [0, 16], [32, 16]), 	//floor 1
 		
-		new Sprite('res/tiles.png', [0, 32] , [32, 32],0,[0], -200),		//wall
+		new Sprite('res/tiles.png', [0, 32], [32, 32]),		//wall
 		
-		new Sprite('res/tiles.png', [0, 48] , [24, 16],0,[0], -500),		//floor
+		new Sprite('res/tiles.png', [32, 32], [32, 32]),	
 	],
 	
 	create: function(w,h){
@@ -31,12 +55,7 @@ var tilemap = {
 	},
 	
 	update: function(dt){
-		/*if(mousePress0 && input.isDown('CTRL')){
-			this.setTile(Math.floor((mouseWorld[0])/24), Math.floor(mouseWorld[1]/16), 1);
-		}
-		if(mousePress2 && input.isDown('CTRL')){
-			this.setTile(Math.floor((mouseWorld[0])/24), Math.floor(mouseWorld[1]/16), 0);
-		}*/
+		
 	},
 	
 	render: function(ctx){
@@ -45,44 +64,26 @@ var tilemap = {
 			for(var y=0; y<this.height; y++){
 			
 				var tile = this.data[x][y];
-				//console.log(tile);
-				var sprite = this.sprites[parseInt(tile)]
 				
-				var h = 0;
-				if(tile > 1)
-					h = 8;
+				var offsetH = 0;
+				if(tile > 1){
+					offsetH = 8;
+
+					/*renderData.push({
+						pos: [(x - y) * 16, (x + y) * 8 + offsetH+16, 0],
+						sprite: this.sprites[parseInt(tile+1)],
+						depth: -(y+x-1)*10-5,
+					});*/
+				}
+					
 				
 				renderData.push({
-					pos: [(x - y) * 16, (x + y) * 8+h, 0],
-					sprite: sprite,
+					pos: [(x - y) * 16, (x + y) * 8 + offsetH, 0],
+					sprite: this.sprites[parseInt(tile)],
+					depth: -(y+x)*10-5,
 				});
 				
-				/*var up    = (this.getTile(x  , y+1) == 0 || (y+1)>=this.h);
-				var right = (this.getTile(x+1, y  ) == 0);
-				var left  = (this.getTile(x-1, y  ) == 0);
-				var down  = (this.getTile(x  , y-1) == 0);
 				
-				//if(tile!=0){
-				
-					var indx = 3;
-						 if(up){
-							renderData.push({
-								pos: [x*24+12, (y+1)*16+8+8, 0],
-								sprite: this.sprites[2],
-							});
-							renderData.push({
-								pos: [x*24+12, (y+3)*16+8, 0],
-								sprite: this.sprites[0],
-							});
-						 }
-					else if(up && !left && !down && !right) indx = 1;
-				
-					renderData.push({
-						pos: [x*24+12, y*16+8, 0],
-						sprite: this.sprites[indx],
-					});
-
-				//}*/
 			}	
 		}
 	},

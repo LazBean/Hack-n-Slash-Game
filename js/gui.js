@@ -34,10 +34,10 @@ function GUIDrawTextSprite(txt, x, y){
 		
 		for(var n=0; n<chars.length; n++){
 			if(txt[i] == chars[n]){
-				var w = 32;
+				var w = 16;
 				var nx = n%w;
 				var ny = Math.floor(n/w);
-				GUIDrawSprite(x +(i*8), y, new Sprite('res/gui.png', [nx*8, ny*8] , [8, 8]));
+				GUIDrawSprite(x +(i*8), y, new Sprite('res/font.png', [nx*8, ny*8] , [8, 8]));
 				break;
 			}
 		}

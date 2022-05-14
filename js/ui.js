@@ -34,7 +34,7 @@ function DrawUI(){
 }
 
 var eListShow = false;
-var ButtonSprite = new Sprite('res/gui.png', [0, 0] , [24, 24],0,[0]);
+var ButtonSprite = new Sprite('res/gui.png', [0, 16] , [48, 48],0,[0]);
 var ButtonSpriteHover = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
 var ButtonSpriteActive = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
 
@@ -50,7 +50,7 @@ function GUIButton(x,y,w,h){
 		if(mousePress0){
 			sprites = buttonSpritePack.spritesA;
 		}
-		if(mouseClick){
+		if(mouseClick0){
 			value = true;
 		}
 	}

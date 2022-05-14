@@ -1,6 +1,6 @@
 
 (function() {
-    function Sprite(url, pos, size, speed, frames, depth, scaleX, angle, dir) {
+    function Sprite(url, pos, size, speed, frames, scaleX, angle, dir) {
         this.pos = pos;
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
@@ -8,7 +8,6 @@
         this._index = 0;
         this.url = url;
         this.dir = dir || 'horizontal';
-		this.depth = depth;
 		this.scaleX = scaleX || 1;
 		this.angle = angle || 0;
 		this.once = false;
@@ -61,13 +60,22 @@
 			
 			var cut = (this.rect==null)? [0,0,0,0] : [this.rect[0], this.rect[1], this.rect[2], this.rect[3]];
 
-			
-			ctx.drawImage(img,
-						//x + this.offset[0] + cut[0], y + this.offset[1] + cut[1],
-						x + cut[0], y + cut[1],
-						this.size[0] + cut[2] , this.size[1] + cut[3],
-						dx, dy,
-						this.size[0] + cut[2], this.size[1] + cut[3]);
+
+			//void ctx.drawImage(image, dx, dy);
+            //void ctx.drawImage(image, dx, dy, dWidth, dHeight);
+            //void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+            //dx = Координата по оси Х, в которую будет помещён верхний левый угол 
+            //dWidth = Ширина изображения
+            //sx = X верхнего левого угла фрагмента, который будет вырезан
+            //sWidth = Ширина фрагмента, который будет вырезан из изображения источника
+
+			ctx.drawImage(
+                img,
+				x + cut[0], y + cut[1],
+				this.size[0] + cut[2] , this.size[1] + cut[3],
+				dx, dy,
+				this.size[0] + cut[2], this.size[1] + cut[3]);
 						  
 			//ctx.globalCompositeOperation = "blend";
         }

@@ -7,8 +7,8 @@ class Entity
 		this.name = name;
 		this.speed = 0;
 		this.dir = [0, 0, 0];
-		this.pos = [50 + randomFRange(0,200), 50 + randomFRange(0,50), 0];
-		this.sprite = new Sprite('res/tiles.png', [0, 80], [24, 32], 8, [0,1,0,2], -10);
+		this.pos = [0, 0, 0];
+		this.sprite = new Sprite('res/tiles.png', [0, 80], [24, 32], 8, [0,1,0,2]);
 		
 		entities.push(this);
 	}
@@ -44,10 +44,10 @@ class Player extends Entity
 	{
 		super(name);
 		
-		this.speed = 128;
+		this.speed = 4;
 		this.dir = [0, 0, 0];
-		this.pos = [50 + randomFRange(0,200), 50 + randomFRange(0,50), 0];
-		this.sprite = new Sprite('res/player.png', [0, 0], [32, 32], 8, [0,1,2,3,4,5,6,7], -10);
+		this.pos = [4 + randomFRange(0,8), 4 + randomFRange(0,8), 0];
+		this.sprite = new Sprite('res/player.png', [0, 0], [32, 32], 8, [0,1,2,3,4,5,6,7]);
 		
 		this.timer = 0;
 		this.curFrame = 0;
@@ -76,14 +76,14 @@ class Player extends Entity
 			}
 		}
 		
-		var tm = 128;
+		var tm = 1;
 		if(!this.isJumping)
-			tm = vectorLength([this.dir[0]*this.speed, this.dir[1]*this.speed, 0]);
+			tm = vectorLength([this.dir[0]*this.speed, this.dir[1]*this.speed, 0])/this.speed;
 		this.timer -= dt * tm;
 		if(this.timer<=0){
 			this.curFrame = (this.curFrame+1)%this.curAnim.length;
 			this.sprite.frames = [this.curAnim[this.curFrame]];
-			this.timer = 8;
+			this.timer = 0.1;
 		}
 		
 		//movement
@@ -134,13 +134,13 @@ class Player extends Entity
 		
 		
 		//pickup gold
-		for(var i=0; i<entities.length; i++){
+		/*for(var i=0; i<entities.length; i++){
 			
 			var e = entities[i];
 			if(e.name == "coin" && Distance(this.pos, e.pos)<16 && !e.picked){
 				entities[i].pickup(this);
 			}
-		}
+		}*/
 		
 		
 		//this.dir = vectorLerp(this.dir, [0,0,-128], 0.05);
@@ -157,12 +157,19 @@ class Player extends Entity
 	render(ctx)
 	{
 		this.sprite.offset = [0,16];
-		this.sprite.depth = -this.pos[1]+this.pos[2]+1;
-		renderData.push(this);
+		//renderData.push(this);
+		//console.log(this.pos);
+		renderData.push({
+			pos: WorldToIsometric(this.pos),
+			sprite: this.sprite,
+			depth: -(this.pos[1]+this.pos[0])*10+5,
+		});
+
 		//shadow
 		renderData.push({
-			pos: [this.pos[0], this.pos[1], 0],
-			sprite: new Sprite('res/misc.png', [0, 0], [16, 8],0,[0], -this.pos[1]),
+			pos: WorldToIsometric(this.pos),
+			sprite: new Sprite('res/misc.png', [0, 0], [16, 8],0,[0]),
+			depth: -(this.pos[1]+this.pos[0])*10+1,
 		});
 	}
 }

@@ -8,9 +8,10 @@ canvas.addEventListener("mousewheel", onMouseWheel, false);
 
 
 var mouse = [0,0];
-var mouseWorld = [0,0];
 
-var mouseClick = false;
+var mouseClick0 = false;
+var mouseClick1 = false;
+var mouseClick2 = false;
 
 var mousePress0 = false;
 var mousePress1 = false;
@@ -20,29 +21,30 @@ var mouseWheel = 0;
 
 
 function resetInput(){
-	mouseClick = false;
+	mouseClick0 = false;
+	mouseClick1 = false;
+	mouseClick2 = false;
 	mouseWheel = 0;
 }
 
 //MOUSE EVENTS
 function onClick(e){
 	if(e.button == 0){
-			mouseClick = true;
+		mouseClick0 = true;
 	}
 	else if(e.button == 1){	
-	
+		mouseClick1 = true;
 	}
 	else if(e.button == 2){	
-	
+		mouseClick2 = true;
 	}
 	
 }
 
 function onMouseMove(e)
 {
-	console.log(canvas.style.width)
-  var w = (canvas.width/parseInt(canvas.style.width, 10));
-  var h = (canvas.width/parseInt(canvas.style.width, 10));
+  var w = (canvas.width/parseInt(canvas.offsetWidth, 10));
+  var h = (canvas.height/parseInt(canvas.offsetHeight, 10));
 
   var x = e.x * w;
   var y = e.y * h;
@@ -50,37 +52,20 @@ function onMouseMove(e)
   x -= canvas.offsetLeft * w - document.body.scrollLeft/2;
   y -= canvas.offsetTop * h - document.body.scrollTop/2;
 
-  mouse = [x, canvas.height - y];
-  mouseWorld = [mouse[0] + camera[0], mouse[1] - camera[1]];
-  //console.log(document.documentElement.scrollLeft);
+  mouse = [x, canvas.height - y, 0];
+  
+  //console.log(mouseWorld);
 }
 
 function onMouseDown(e){
 	if(e.button == 0){	//left click
 		mousePress0 = true;
-		
-		for(var i=0; i<entities.length; i++){
-				var e = entities[i];
-
-				if(pointInBox(mouseWorld, e.pos, 16)){
-					e.selected = true;
-				}
-				else{
-					e.selected = false;
-				}
-			}
 	}
 	else if(e.button == 1){		//wheel click
 		mousePress1 = true;
 	}
 	else if(e.button == 2){		//right click
 		mousePress2 = true;
-	
-		for(var i=0; i<entities.length; i++){
-			var e = entities[i];
-			if(e.selected)
-				e.dir = vectorNormalize(vectorDir(e.pos, mouseWorld));
-		}
 	}
 }
 

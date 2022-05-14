@@ -1,8 +1,11 @@
 
+//
+var debugMode = false;
+var cursorTilePos = [0,0,0];
 
-var goldCount = 0;
-
+//
 var player;
+var goldCount = 0;
 
 var entities = [];
 var particles = [];
@@ -11,16 +14,16 @@ var mapData = [
 	[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
-	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
-	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
-	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
-	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
-	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
-	[0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+	[0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,2],
+	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,2],
+	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,2,2],
+	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,2,2],
+	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,2,2],
+	[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,2],
+	[0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,2],
+	[0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,2],
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
@@ -82,8 +85,13 @@ var level = {
 			particles[i].update(dt);
 		}
 		
-		camera[0] = player.pos[0]-canvas.width/2;
-		camera[1] = player.pos[1]-canvas.height/2;
+		//CAMERA FOLLOW
+		var playerToScreen = WorldToIsometric(player.pos);
+		camera[0] = playerToScreen[0]-canvas.width/2;
+		camera[1] = playerToScreen[1]-canvas.height/2;
+		
+		
+		
     },
 	
 	render: function(ctx){
@@ -92,25 +100,43 @@ var level = {
 			entities[i].render(ctx);
 		}
 		this.map.render(ctx);
-		
+
+
+
+
+		//DEBUG
+		if(!debugMode) return;
+		//GHOST TILE
+		cursorTilePos = ScreenToIsometric(mouse);
+
+		cursorTilePos[0] = Math.round(cursorTilePos[0]);
+		cursorTilePos[1] = Math.round(cursorTilePos[1]);
+
+		if(mouseClick0){
+			this.map.data[cursorTilePos[0]][cursorTilePos[1]] = 2;
+		}
+
+		renderData.push({
+			pos: WorldToIsometric(cursorTilePos),
+			sprite: new Sprite('res/tiles.png', [64, 0]  , [32, 16],0,[0], 0),
+			depth: 1000,
+		});
 	},
 	
 	onGUI: function(ctx){
 	
 		
 		if(GUIButton(canvas.width-24, canvas.height-0, 24, 24)){
-			if(canvas.width != 256){
-				canvas.width = 256;
-				canvas.height = 128;
-			}
-			else{
-				canvas.width = 512;
-				canvas.height = 256;
-			}
+			debugMode = !debugMode;
 			audio.play('audio/hoverUI.wav');
 		}
 		
 		GUIDrawTextSprite("GOLD:"+goldCount, 100, canvas.height-4);
+
+		if(debugMode){
+			DrawText(mouse[0] + 10, mouse[1]-10, ''+cursorTilePos, "rgba(160, 160, 160, 1)");
+		}
+		
 		
 		/*var spr = new Sprite('res/gui.png', [0, 0], [8, 8], 8, [0,1,2,3], -40);
 		GUIDrawSprite(canvas.width-24, canvas.height-0, spr ,[0,0,24,24]);*/
