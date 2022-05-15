@@ -66,14 +66,6 @@ var level = {
 	},
 	
 	update: function(dt) {
-		//TRANS TO PLAYER CTRL
-		if(mousePress0 && input.isDown('CTRL')){
-			this.map.setTile(Math.floor((mouseWorld[0])/24), Math.floor(mouseWorld[1]/16), 1);
-		}
-		if(mousePress2 && input.isDown('CTRL')){
-			this.map.setTile(Math.floor((mouseWorld[0])/24), Math.floor(mouseWorld[1]/16), 0);
-		}
-	
 	
 		this.map.update(dt);
 		
@@ -112,8 +104,11 @@ var level = {
 		cursorTilePos[0] = Math.round(cursorTilePos[0]);
 		cursorTilePos[1] = Math.round(cursorTilePos[1]);
 
-		if(mouseClick0){
+		if(mousePressL && input.isDown('CTRL')){
 			this.map.data[cursorTilePos[0]][cursorTilePos[1]] = 2;
+		}
+		if(mousePressR && input.isDown('CTRL')){
+			this.map.data[cursorTilePos[0]][cursorTilePos[1]] = 0;
 		}
 
 		renderData.push({

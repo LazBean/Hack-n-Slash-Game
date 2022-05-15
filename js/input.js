@@ -1,6 +1,8 @@
 
 //MOUSE CLICK
 canvas.addEventListener("click", onClick, false);
+canvas.addEventListener("contextmenu", onContextmenu, false);
+
 canvas.addEventListener("mousemove", onMouseMove, false);
 canvas.addEventListener("mousedown", onMouseDown, false);
 document.addEventListener("mouseup", onMouseUp, false);
@@ -9,37 +11,31 @@ canvas.addEventListener("mousewheel", onMouseWheel, false);
 
 var mouse = [0,0];
 
-var mouseClick0 = false;
-var mouseClick1 = false;
-var mouseClick2 = false;
+var mouseClickL = false;
+var mouseClickR = false;
 
-var mousePress0 = false;
+var mousePressL = false;
 var mousePress1 = false;
-var mousePress2 = false;
+var mousePressR = false;
 
 var mouseWheel = 0;
 
 
 function resetInput(){
-	mouseClick0 = false;
-	mouseClick1 = false;
-	mouseClick2 = false;
+	mouseClickL = false;
+	mouseClickR = false;
 	mouseWheel = 0;
 }
 
 //MOUSE EVENTS
 function onClick(e){
-	if(e.button == 0){
-		mouseClick0 = true;
-	}
-	else if(e.button == 1){	
-		mouseClick1 = true;
-	}
-	else if(e.button == 2){	
-		mouseClick2 = true;
-	}
-	
+	mouseClickL = true;
 }
+
+function onContextmenu(e){
+	mouseClickR = true;
+}
+
 
 function onMouseMove(e)
 {
@@ -59,26 +55,26 @@ function onMouseMove(e)
 
 function onMouseDown(e){
 	if(e.button == 0){	//left click
-		mousePress0 = true;
+		mousePressL = true;
 	}
 	else if(e.button == 1){		//wheel click
 		mousePress1 = true;
 	}
 	else if(e.button == 2){		//right click
-		mousePress2 = true;
+		mousePressR = true;
 	}
 }
 
 function onMouseUp(e){
 	
 	if(e.button == 0){
-		mousePress0 = false;
+		mousePressL = false;
 	}
 	else if(e.button == 1){
 		mousePress1 = false;
 	}
 	else if(e.button == 2){
-		mousePress2 = false;
+		mousePressR = false;
 	}
 }
 

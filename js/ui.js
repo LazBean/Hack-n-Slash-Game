@@ -47,10 +47,10 @@ function GUIButton(x,y,w,h){
 	if(pointInScreenRect(mouse, [x,y], w, h)){
 		sprites = buttonSpritePack.spritesH;
 		
-		if(mousePress0){
+		if(mousePressL){
 			sprites = buttonSpritePack.spritesA;
 		}
-		if(mouseClick0){
+		if(mouseClickL){
 			value = true;
 		}
 	}
