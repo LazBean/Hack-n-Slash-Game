@@ -44,7 +44,7 @@ function GUIButton(x,y,w,h){
 	var value = false;
 	var sprites = buttonSpritePack.sprites;
 	
-	if(pointInScreenRect(mouse, [x,y], w, h)){
+	if(pointInScreenRect(mouse, x, y, w, h)){
 		sprites = buttonSpritePack.spritesH;
 		
 		if(mousePressL){

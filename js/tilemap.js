@@ -6,11 +6,11 @@ TILE_WIDTH_HALF = TILE_WIDTH/2;
 TILE_HEIGHT_HALF = TILE_HEIGHT/2;
 
 function ScreenToIsometric(pos) {
-	var x = pos[0] + camera[0];
-	var y = pos[1] + camera[1];
+	var x = pos.x + camera.x;
+	var y = pos.y + camera.y;
 	var xx = x / TILE_WIDTH + y / TILE_HEIGHT; //(mx / TILE_WIDTH_HALF + my / TILE_HEIGHT_HALF) /2;
 	var yy = y / TILE_HEIGHT - x / TILE_WIDTH; //(my / TILE_HEIGHT_HALF - (mx / TILE_WIDTH_HALF)) /2;
-    return [xx,yy,pos[2]];
+    return {x:xx, y:yy, z:pos.z};
 }
 
 function FromIsometricToScreen(pos) {
@@ -18,7 +18,7 @@ function FromIsometricToScreen(pos) {
 }
 
 function WorldToIsometric(pos) {
-	var nPos = [(pos[0] - pos[1]) * TILE_WIDTH_HALF, (pos[0] + pos[1]) * TILE_HEIGHT_HALF, pos[2]];
+	var nPos = {x:(pos.x - pos.y) * TILE_WIDTH_HALF, y:(pos.x + pos.y) * TILE_HEIGHT_HALF, z:pos.z};
     return nPos;
 }
 
@@ -63,54 +63,58 @@ var tilemap = {
 		for(var x=0; x<this.width; x++){
 			for(var y=0; y<this.height; y++){
 			
-				var tile = this.data[x][y];
+				var tile = this.getTile(x,y);
 				
 				var offsetH = 0;
+				var offsDepth = -9;
 				if(tile > 1){
 					offsetH = 8;
-
+					offsDepth = 5;
 					/*renderData.push({
 						pos: [(x - y) * 16, (x + y) * 8 + offsetH+16, 0],
 						sprite: this.sprites[parseInt(tile+1)],
 						depth: -(y+x-1)*10-5,
 					});*/
 				}
-					
+
+				isoPos = WorldToIsometric({x:x, y:y, z:0});
+				isoPos.y += offsetH;	
 				
 				renderData.push({
-					pos: [(x - y) * 16, (x + y) * 8 + offsetH, 0],
+					pos: isoPos,
 					sprite: this.sprites[parseInt(tile)],
-					depth: -(y+x)*10-5,
+					depth: -(y+x)*10+offsDepth,
 				});
-				
 				
 			}	
 		}
 	},
 	
 	
-	/*getTile: function(x,y){
-		return this.data[y * this.width + x];
+	getTile: function(x,y){
+		if(x<0 || x>=this.width || y<0 || y>=this.height)
+			return null;
+		return this.data[x][y];
+	},
+
+	getTilePos: function(pos){
+		var x = Math.round(pos.x);
+		var y = Math.round(pos.y);
+		var z = Math.round(pos.z);
+		return {x:x, y:y, z:z};
 	},
 	
 	setTile: function(x,y,id){
-		this.data[y * this.width + x] = id;
-	},*/
+		if(this.getTile(x,y) == null)
+			return;
+		this.data[x][y] = id;
+	},
 };
 
 
 
 
-
-
-
-
-
-
-
-
-
-var lightmap = {
+/*var lightmap = {
 	width: 0,
 	height: 0,
 	tiles: [],
@@ -155,25 +159,7 @@ var lightmap = {
 			}
 		}
 	},
-	
-	
-	getTile: function(x,y){
-		return this.tiles[y * this.width + x];
-	},
-	
-	setTile: function(x,y,id){
-		this.tiles[y * this.width + x] = id;
-	},
-	
-	tileBlocked: function (x,y){
-		var up    = (this.tiles[x + this.width * (y+1)] == 1);
-		var right = (this.tiles[(x+1) + this.width * (y)] == 1);
-		var left  = (this.tiles[(x-1) + this.width * (y)] == 1);
-		var down  = (this.tiles[x + this.width * (y-1)] == 1);
-		
-		var v = up && right && left && down;
-		return v;
-	},
-};
+
+};*/
 
 

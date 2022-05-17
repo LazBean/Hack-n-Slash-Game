@@ -9,7 +9,7 @@ document.addEventListener("mouseup", onMouseUp, false);
 canvas.addEventListener("mousewheel", onMouseWheel, false);
 
 
-var mouse = [0,0];
+var mouse = {x:0, y:0, z:0};
 
 var mouseClickL = false;
 var mouseClickR = false;
@@ -48,7 +48,7 @@ function onMouseMove(e)
   x -= canvas.offsetLeft * w - document.body.scrollLeft/2;
   y -= canvas.offsetTop * h - document.body.scrollTop/2;
 
-  mouse = [x, canvas.height - y, 0];
+  mouse = {x:x, y:canvas.height - y, z:0};
   
   //console.log(mouseWorld);
 }

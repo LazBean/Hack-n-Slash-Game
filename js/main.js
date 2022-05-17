@@ -19,7 +19,7 @@ ctx.imageSmoothingEnabled = false;
 //ctx.filter = "blur(0px)"
 
 
-var camera = [0,0];
+var camera = {x:0, y:0};
 
 
 
@@ -109,27 +109,7 @@ resources.load([
 ]);
 resources.onReady(init);
 
-//COROUTINES
-/*var clock = coroutine(function*() 
-{
-		while (true) {
-			yield;
-			console.log('Tick!');
-			yield;
-			console.log('Tock!');
-		}
-	});
-	
-function coroutine(f) 
-{
-    var o = f(); // instantiate the coroutine
-    o.next(); // execute until the first yield
-    return function(x) {
-        o.next(x);
-    }
-}
-clock();
-*/
+
 
 //UPDATE
 function update(dt) {
@@ -223,7 +203,7 @@ function renderEntity(e){
 	if(e==null || e.sprite==null) return;
 
 	ctx.save();
-	ctx.translate(Math.round(e.pos[0]+e.sprite.offset[0]-camera[0]), canvas.height-Math.round((e.pos[1]+e.pos[2])+e.sprite.offset[1]-camera[1]));
+	ctx.translate(Math.round(e.pos.x+e.sprite.offset[0]-camera.x), canvas.height-Math.round((e.pos.y+e.pos.z)+e.sprite.offset[1]-camera.y));
 
 	e.sprite.render(ctx);
 	ctx.restore();

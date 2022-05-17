@@ -1,7 +1,7 @@
 
 //
 var debugMode = false;
-var cursorTilePos = [0,0,0];
+var cursorTilePos = {x:0,y:0,z:0};
 
 //
 var player;
@@ -57,12 +57,9 @@ var level = {
 		}
 		
 			
-		//new Chest();
-		//new Ball();
 		//MOB
 		player = new Player();
-			
-		
+
 	},
 	
 	update: function(dt) {
@@ -79,8 +76,8 @@ var level = {
 		
 		//CAMERA FOLLOW
 		var playerToScreen = WorldToIsometric(player.pos);
-		camera[0] = playerToScreen[0]-canvas.width/2;
-		camera[1] = playerToScreen[1]-canvas.height/2;
+		camera.x = playerToScreen.x-canvas.width/2;
+		camera.y = playerToScreen.y-canvas.height/2;
 		
 		
 		
@@ -101,14 +98,14 @@ var level = {
 		//GHOST TILE
 		cursorTilePos = ScreenToIsometric(mouse);
 
-		cursorTilePos[0] = Math.round(cursorTilePos[0]);
-		cursorTilePos[1] = Math.round(cursorTilePos[1]);
+		cursorTilePos.x = Math.round(cursorTilePos.x);
+		cursorTilePos.y = Math.round(cursorTilePos.y);
 
 		if(mousePressL && input.isDown('CTRL')){
-			this.map.data[cursorTilePos[0]][cursorTilePos[1]] = 2;
+			this.map.setTile(cursorTilePos.x,cursorTilePos.y, 2);
 		}
 		if(mousePressR && input.isDown('CTRL')){
-			this.map.data[cursorTilePos[0]][cursorTilePos[1]] = 0;
+			this.map.setTile(cursorTilePos.x,cursorTilePos.y, 0);
 		}
 
 		renderData.push({
@@ -129,7 +126,7 @@ var level = {
 		GUIDrawTextSprite("GOLD:"+goldCount, 100, canvas.height-4);
 
 		if(debugMode){
-			DrawText(mouse[0] + 10, mouse[1]-10, ''+cursorTilePos, "rgba(160, 160, 160, 1)");
+			DrawText(mouse.x + 10, mouse.y-10, cursorTilePos.x+', '+cursorTilePos.y, "rgba(160, 160, 160, 1)");
 		}
 		
 		
