@@ -5,6 +5,7 @@ var cursorTilePos = {x:0,y:0,z:0};
 
 //
 var player;
+var skeleton;
 var goldCount = 0;
 
 var entities = [];
@@ -29,6 +30,18 @@ var mapData = [
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
 ];
 
+//Use quadtree to optimize!
+function getEntitiesToCollideWith(pos)
+{
+	es = []
+	for(var i=0; i<entities.length; i++){
+		var e = entities[i];
+		if(vectorLength(vectorDir(pos, e.pos)) < 2)
+			es.push(e)
+	}
+	return es;
+}
+
 var level = {
     
 	map: tilemap,
@@ -39,12 +52,18 @@ var level = {
 		this.map = tilemap;
 		this.map.data = mapData;
 		this.map.create(16,8);
+
+
+		//MOB
+		player = new Player();
+		skeleton = new Skeleton();
+
 		
 		for(var i=0; i<entities.length; i++) {
-			entities[i].start();
+			//entities[i].start();
 		}
 		for(var i=0; i<particles.length; i++) {
-			particles[i].start();
+			//particles[i].start();
 		}
 		
 		
@@ -55,11 +74,6 @@ var level = {
 		for(var i=0; i<10; i++){
 			//spawnHuman([randomRange(10,canvas.width-20),canvas.height-20]);
 		}
-		
-			
-		//MOB
-		player = new Player();
-
 	},
 	
 	update: function(dt) {
@@ -78,8 +92,6 @@ var level = {
 		var playerToScreen = WorldToIsometric(player.pos);
 		camera.x = playerToScreen.x-canvas.width/2;
 		camera.y = playerToScreen.y-canvas.height/2;
-		
-		
 		
     },
 	

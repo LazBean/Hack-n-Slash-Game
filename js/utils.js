@@ -16,6 +16,16 @@ function boxCollides(pos, size, pos2, size2) {
                     pos2[0]-ww + ww, pos2[1]-ww + ww);
 }
 
+function collidesCircles(posA, rA, posB, rB){
+
+	var direction = vectorDir(posA, posB)
+	var overlap = vectorLength(direction) - (rA + rB);
+	
+	var normal = vectorNormalize(direction);
+	//B.position += direction * overlap
+	return {isCollides:overlap<0, normal:normal, overlap:overlap};
+}
+
 function pointInBox(pos, pos2, size){
 	var w = size/2;
 	var x1 = (pos2[0]-w);
@@ -92,7 +102,7 @@ function random()
 
 function vectorDir(v1, v2) 
 {
-    return [v2[0]-v1[0], v2[1]-v1[1], v2[2]-v1[2]];
+    return {x:v2.x-v1.x, y:v2.y-v1.y, z:v2.z-v1.z};
 }
 
 function vectorLength(v)
