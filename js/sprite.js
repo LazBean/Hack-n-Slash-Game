@@ -70,6 +70,15 @@
             //sx = X верхнего левого угла фрагмента, который будет вырезан
             //sWidth = Ширина фрагмента, который будет вырезан из изображения источника
 
+            
+            //var pix = img.data;
+
+            //for (var i = 0, n = pix.length; i < n; i += 4) {
+                //console.log(pix[i+3])
+            //}
+            
+            
+
 			ctx.drawImage(
                 img,
 				x + cut[0], y + cut[1],

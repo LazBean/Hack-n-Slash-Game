@@ -57,6 +57,9 @@ var level = {
 		//MOB
 		player = new Player();
 		skeleton = new Skeleton();
+		new Skeleton();
+		new Skeleton();
+		new Skeleton();
 
 		
 		for(var i=0; i<entities.length; i++) {
@@ -129,6 +132,8 @@ var level = {
 	
 	onGUI: function(ctx){
 	
+		//Tips
+		DrawText(10, 20, 'move - WASD' + '   attack - E' + '   dodge - SPACE', "rgba(160, 160, 160, 1)");
 		
 		if(GUIButton(canvas.width-24, canvas.height-0, 24, 24)){
 			debugMode = !debugMode;
@@ -140,6 +145,53 @@ var level = {
 		if(debugMode){
 			DrawText(mouse.x + 10, mouse.y-10, cursorTilePos.x+', '+cursorTilePos.y, "rgba(160, 160, 160, 1)");
 		}
+
+		if(GUIButton(canvas.width-64, canvas.height-100, 64, 24, "Login")){
+			
+			let playerID;
+			let playerRef;
+
+			// MULTIPLAYER AUTH
+			firebase.auth().onAuthStateChanged((user) => {
+				console.log(user);
+				if(user){
+					//logged in!
+					playerID = user.uid;
+					playerRef = firebase.database().ref('players/'+playerID);
+
+					playerRef.set({
+						id: playerID,
+						name: "Bean",
+						color: "rgba(0, 0, 200, 1)",
+						x: 3,
+						y: 3,
+						coins: 0,
+					});
+
+					//Remove me when im disconnected
+					playerRef.onDisconnect().remove();
+
+					//Start game
+					//...
+				}
+				else{
+					//logged out
+				}
+			});
+
+			firebase.auth().signInAnonymously().catch((error) => {
+				var errorCode = error.code;
+				var errorMsg = error.message;
+				console.log(errorCode, errorMsg);
+			});
+
+
+			audio.play('audio/hoverUI.wav');
+		}
+
+		let p1 = WorldToIsometric(player.pos)
+		let p2 = WorldToIsometric({x:1, y:1})
+		//DrawArrow(p1.x - camera.x, p1.y - camera.y, p2.x - camera.x, p2.y - camera.y, "rgba(160, 160, 160, 1)")
 		
 		
 		/*var spr = new Sprite('res/gui.png', [0, 0], [8, 8], 8, [0,1,2,3], -40);

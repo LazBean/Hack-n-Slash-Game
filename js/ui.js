@@ -34,29 +34,7 @@ function DrawUI(){
 }
 
 var eListShow = false;
-var ButtonSprite = new Sprite('res/gui.png', [0, 16] , [48, 48],0,[0]);
-var ButtonSpriteHover = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
-var ButtonSpriteActive = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
 
-
-
-function GUIButton(x,y,w,h){
-	var value = false;
-	var sprites = buttonSpritePack.sprites;
-	
-	if(pointInScreenRect(mouse, x, y, w, h)){
-		sprites = buttonSpritePack.spritesH;
-		
-		if(mousePressL){
-			sprites = buttonSpritePack.spritesA;
-		}
-		if(mouseClickL){
-			value = true;
-		}
-	}
-	GUIDrawSlicedSprite(x, y, w, h, sprites);
-	return value;
-}
 
 function GUIHorizontalSlider(x,y,w,h, value){
 	GUIDrawSlicedSprite(x, y, w, h, buttonSpritePack.sprites);

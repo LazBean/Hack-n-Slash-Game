@@ -53,7 +53,7 @@ function main() {
     requestAnimFrame(main);
 };
 
-//FPS CHECKER
+//FPS COUNTER
 var fps   = 0;
 var accum   = 0;
 var frames  = 0;
@@ -80,8 +80,6 @@ function TakeFPS(dt)
 
 
 
-//^^^^^^^^^^^^^^^^^^^^^^^
-//^^NOTHING INTERESTING^^
 //^^^^^^^^^^^^^^^^^^^^^^^
 
 var gameTime = 0;

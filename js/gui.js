@@ -74,6 +74,33 @@ function GUIDrawSlicedSprite(xx, yy, ww, hh, sprites){
 	
 }
 
+var ButtonSprite = new Sprite('res/gui.png', [0, 16] , [48, 48],0,[0]);
+var ButtonSpriteHover = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
+var ButtonSpriteActive = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
+
+
+
+function GUIButton(x,y,w,h, text=null){
+	var value = false;
+	var sprites = buttonSpritePack.sprites;
+	
+	if(pointInScreenRect(mouse, x, y, w, h)){
+		sprites = buttonSpritePack.spritesH;
+		
+		if(mousePressL){
+			sprites = buttonSpritePack.spritesA;
+		}
+		if(mouseClickL){
+			value = true;
+		}
+	}
+	GUIDrawSlicedSprite(x, y, w, h, sprites);
+	let curTextColor = (value)? 0 : 160;
+	if(text)
+		DrawText(x+ w/2-(text.length/2*8), y-h/2+4, text, 'rgba(160, 160, '+curTextColor+', 1)');
+	return value;
+}
+
 
 
 
@@ -105,7 +132,7 @@ function DrawArrow(fromx, fromy, tox, toy, color){
 	
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");
-	var headlen = 10;
+	var headlen = 8;
 	
 	var angle = Math.atan2(toy-fromy,tox-fromx);
 	
