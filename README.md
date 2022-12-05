@@ -2,6 +2,15 @@
 
 [WIP] Browser online hack-n-slash game - https://lazbean.github.io/Hack-n-Slash-Game/
 
-Game is made with pure JS.
-Graphics rendering in html canvas.
-For server purpose using Firebase.
+This game was hosted using [GitHub Pages](https://pages.github.com/).
+
+The game is made in pure JS.  
+Graphics rendering in HTML canvas.  
+Firebase is used for the server.
+
+This game is still under development, with no design document or title yet, just having fun making this prototype.
+
+- [x] Added connection with Firebase
+- [ ] Make fine title for the game
+- [ ] Add some cool gameplay to finally make it fun 
+- [ ] Design README
