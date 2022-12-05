@@ -16,11 +16,11 @@ function DrawBox(x, y, w, h, color){
 
 
 
-function GUIDrawSprite(x, y, img, r){
+function GUIDrawSprite(x, y, sprite, cutRect){
 	ctx.save();
-	ctx.translate( Math.round(x+img.size[0]/2), canvas.height - Math.round(y-img.size[1]/2) );
-	img.rect = r;
-	img.render(ctx);
+	ctx.translate( Math.round(x+sprite.size[0]/2), canvas.height - Math.round(y-sprite.size[1]/2) );
+	sprite.rect = cutRect;
+	sprite.render(ctx);
 	ctx.restore();
 }
 
@@ -45,33 +45,90 @@ function GUIDrawTextSprite(txt, x, y){
 }
 
 function GUIDrawSlicedSprite(xx, yy, ww, hh, sprites){
-	var w = ww/8;
-	var h = hh/8;
-	
-	var cutW = (ww<16)? 8-(ww-ww/2) : 0;
-	var cutH = (hh<16)? 8-(hh-hh/2) : 0;
-	var cW = (ww<16)? 1 : 0;
-	var cH = (hh<16)? 1 : 0;
 
-	for(var x=1; x<w-1; x++){
-		for(var y=1; y<h-1; y++){
-			GUIDrawSprite(xx+x*8, yy-y*8, sprites[4]);	//center
+	//upper
+	var s0 = sprites[0]
+	var s1 = sprites[1]
+	var s2 = sprites[2]
+
+	// upper-left
+	var cutW = (ww<s0.size[0])? ww-s0.size[0] : 0
+	var cutH = (hh<s0.size[1])? hh-s0.size[1] : 0
+	GUIDrawSprite(xx, yy, s0, [0,0,cutW,cutH]);
+
+	// upper-center
+	
+	var innerW = ww - s0.size[0] - s2.size[0]
+	var xN = innerW / s1.size[0]
+	var cut1W = (innerW % s1.size[0])
+
+	for(var x=0; x<=xN; x++){
+
+		let cw = (x<=xN-1)? 0 : -s1.size[0]+cut1W
+		GUIDrawSprite(xx+(s0.size[0])+(s1.size[0]*x), yy, s1, [0,0,cw,cutH]);
+	}
+
+	// upper-right
+	GUIDrawSprite(xx+ww+(-s0.size[0]-cutW), yy, s2, [cutW*-1,0,cutW,cutH]);
+
+	// middle
+	var s3 = sprites[3]
+	var s4 = sprites[4]
+	var s5 = sprites[5]
+
+	
+
+
+	// lower
+	var s6 = sprites[6]
+	var s7 = sprites[7]
+	var s8 = sprites[8]
+
+	// lower-left
+	var cut6W = (ww<s6.size[0])? ww-s6.size[0] : 0
+	var cut6H = (hh<s6.size[1])? hh-s6.size[1] : 0
+	GUIDrawSprite(xx, yy-hh-(-cut6H-s6.size[1]), s6, [0,cut6H*-1,cut6W,cut6H]);
+
+	// lower-center
+	for(var x=0; x<=xN; x++){
+
+		let cw = (x<=xN-1)? 0 : -s1.size[0]+cut1W
+		GUIDrawSprite(xx+(s0.size[0])+(s1.size[0]*x), yy-hh-(-s6.size[0]-cut6H), s7, [0,cut6H*-1,cw,cut6H]);
+	}
+
+	// lower-right
+	var cut8W = (ww<s8.size[0])? ww-s8.size[0] : 0
+	var cut8H = (hh<s8.size[1])? hh-s8.size[1] : 0
+	GUIDrawSprite(xx+ww+(-s8.size[0]-cut8W), yy-hh-(-s8.size[0]-cut8H), s8, [cut8W*-1,cut8H*-1,cut8W,cut8H]);
+
+	// middle-left
+	var innerH = hh - s0.size[1] - s6.size[1]
+	var yN = innerH / s3.size[1]
+	var cut3H = (innerH % s3.size[1])
+
+	for(var y=0; y<=yN; y++){
+
+		let ch = (y<=yN-1)? 0 : -s3.size[1]+cut3H
+		GUIDrawSprite(xx, yy-hh+(s3.size[1]*y)+ch+s0.size[1]+s6.size[1], s3, [0,0,cutW,ch]);
+	}
+
+	// middle-right
+	for(var y=0; y<=yN; y++){
+
+		let ch = (y<=yN-1)? 0 : -s3.size[1]+cut3H
+		GUIDrawSprite(xx+ww+(-s8.size[0]-cut8W), yy-hh+(s3.size[1]*y)+ch+s0.size[1]+s6.size[1], s5, [cut8W*-1,0,cut8W,ch]);
+	}
+
+	// middle-center
+	for(var x=0; x<=xN; x++){
+		for(var y=0; y<=yN; y++){
+
+			let cw = (x<=xN-1)? 0 : -s1.size[0]+cut1W
+			let ch = (y<=yN-1)? 0 : -s3.size[1]+cut3H
+
+			GUIDrawSprite(xx+(s0.size[0])+(s1.size[0]*x), yy-hh+(s3.size[1]*y)+ch+s0.size[1]+s6.size[1], s4, [0,0,cw,ch]);
 		}
 	}
-	for(var x=1; x<w-1; x++){
-		GUIDrawSprite(xx+8*x, yy, sprites[1], [0,0,0,(-cutH+1)*cH]);
-		GUIDrawSprite(xx+8*x, yy-8*(h-1)-(cutH*cH), sprites[7], [0,(cutH)*cH,0,(-cutH)*cH]);	//horizontal
-	}
-	for(var y=1; y<h-1; y++){
-		GUIDrawSprite(xx, yy-8*y, sprites[3], [0,0,(-cutW+1)*cW,0]);
-		GUIDrawSprite(xx+8*(w-1)+(cutW*cW), yy-8*y, sprites[5], [(cutW)*cW,0,(-cutW)*cW,0]);	//vertical
-	}
-	
-	GUIDrawSprite(xx, yy, sprites[0], [0,0,(-cutW+1)*cW,(-cutH+1)*cH]);
-	GUIDrawSprite(xx+8*(w-1)+(cutW*cW), yy, sprites[2], [(cutW)*cW,0,(-cutW)*cW,(-cutH+1)*cH]);
-	GUIDrawSprite(xx, yy-8*(h-1)-(cutH*cH), sprites[6], [0,(cutH)*cH,(-cutW+1)*cW,(-cutH)*cH]);
-	GUIDrawSprite(xx+8*(w-1)+(cutW*cW), yy-8*(h-1)-(cutH*cH), sprites[8], [(cutW)*cW,(cutH)*cH,(-cutW)*cW,(-cutH)*cH]);
-	
 }
 
 var ButtonSprite = new Sprite('res/gui.png', [0, 16] , [48, 48],0,[0]);
@@ -80,12 +137,18 @@ var ButtonSpriteActive = new Sprite('res/gui.png', [24, 0] , [24, 24],0,[0]);
 
 
 
-function GUIButton(x,y,w,h, text=null){
+
+
+function GUIButton(x,y,w,h, text=null, font_color='rgba(255, 255, 255, 1)', font_color_h='rgba(100, 100, 100, 1)'){
 	var value = false;
 	var sprites = buttonSpritePack.sprites;
 	
+	let curTextColor = font_color;
+
 	if(pointInScreenRect(mouse, x, y, w, h)){
 		sprites = buttonSpritePack.spritesH;
+
+		curTextColor = font_color_h
 		
 		if(mousePressL){
 			sprites = buttonSpritePack.spritesA;
@@ -95,9 +158,9 @@ function GUIButton(x,y,w,h, text=null){
 		}
 	}
 	GUIDrawSlicedSprite(x, y, w, h, sprites);
-	let curTextColor = (value)? 0 : 160;
+	
 	if(text)
-		DrawText(x+ w/2-(text.length/2*8), y-h/2+4, text, 'rgba(160, 160, '+curTextColor+', 1)');
+		DrawText(x+ w/2-(text.length/2*8), y-h/2+4, text, curTextColor);
 	return value;
 }
 
@@ -189,4 +252,82 @@ function DrawRect(x, y, w, h, color, lw=1){
 
 function ClearCanvas(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
+var buttonSpritePack = {
+	sprites : [
+		new Sprite('res/gui.png', [0,  32] , [8, 8]),
+		new Sprite('res/gui.png', [8,  32] , [8, 8]),
+		new Sprite('res/gui.png', [16, 32] , [8, 8]),
+		                                       
+		new Sprite('res/gui.png', [0,  32+8] , [8, 8]),
+		new Sprite('res/gui.png', [8,  32+8] , [8, 8]),
+		new Sprite('res/gui.png', [16, 32+8] , [8, 8]),
+		                                        
+		new Sprite('res/gui.png', [0, 32+16] , [8, 8]),
+		new Sprite('res/gui.png', [8, 32+16] , [8, 8]),
+		new Sprite('res/gui.png', [16,32+16] , [8, 8]),
+	],
+	
+	spritesH : [
+		new Sprite('res/gui.png', [0+24,  32] , [8, 8]),
+		new Sprite('res/gui.png', [8+24,  32] , [8, 8]),
+		new Sprite('res/gui.png', [16+24, 32] , [8, 8]),
+		                                        
+		new Sprite('res/gui.png', [0+24,  32+8] , [8, 8]),
+		new Sprite('res/gui.png', [8+24,  32+8] , [8, 8]),
+		new Sprite('res/gui.png', [16+24, 32+8] , [8, 8]),
+		                                        
+		new Sprite('res/gui.png', [0+24, 32+16] , [8, 8]),
+		new Sprite('res/gui.png', [8+24, 32+16] , [8, 8]),
+		new Sprite('res/gui.png', [16+24,32+16] , [8, 8]),
+	],                  
+	                    
+	spritesA : [        
+		new Sprite('res/gui.png', [0+48,  32] , [8, 8]),
+		new Sprite('res/gui.png', [8+48,  32] , [8, 8]),
+		new Sprite('res/gui.png', [16+48, 32] , [8, 8]),
+		                                       
+		new Sprite('res/gui.png', [0+48,  32+8] , [8, 8]),
+		new Sprite('res/gui.png', [8+48,  32+8] , [8, 8]),
+		new Sprite('res/gui.png', [16+48, 32+8] , [8, 8]),
+		                                      
+		new Sprite('res/gui.png', [0+48, 32+16] , [8, 8]),
+		new Sprite('res/gui.png', [8+48, 32+16] , [8, 8]),
+		new Sprite('res/gui.png', [16+48,32+16] , [8, 8]),
+	],
+}
+	
+	
+var panelSpritePack = {
+	sprites : [
+		new Sprite('res/gui.png', [32,  0] , [8, 12]),
+		new Sprite('res/gui.png', [32+8,  0] , [16, 12]),
+		new Sprite('res/gui.png', [32+24, 0] , [8, 12]),
+												
+		new Sprite('res/gui.png', [32,  12] , [8, 12]),
+		new Sprite('res/gui.png', [32+8,  12] , [16, 12]),
+		new Sprite('res/gui.png', [32+24, 12] , [8, 12]),
+												
+		new Sprite('res/gui.png', [32, 24] , [8, 8]),
+		new Sprite('res/gui.png', [32+8, 24] , [16, 8]),
+		new Sprite('res/gui.png', [32+24,24] , [8, 8]),
+	],
+}
+
+var panel2SpritePack = {
+	sprites : [
+		new Sprite('res/gui.png', [72,  0] , [8, 8]),
+		new Sprite('res/gui.png', [72+8,  0] , [8, 8]),
+		new Sprite('res/gui.png', [72+16, 0] , [8, 8]),
+												
+		new Sprite('res/gui.png', [72,  8] , [8, 8]),
+		new Sprite('res/gui.png', [72+8,  8] , [8, 8]),
+		new Sprite('res/gui.png', [72+16, 8] , [8, 8]),
+												
+		new Sprite('res/gui.png', [72, 16] , [8, 8]),
+		new Sprite('res/gui.png', [72+8, 16] , [8, 8]),
+		new Sprite('res/gui.png', [72+16,16] , [8, 8]),
+	],
 }

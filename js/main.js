@@ -16,7 +16,7 @@ document.body.appendChild(canvas);
 var fontSize = 16;
 ctx.font = fontSize+'px pixelfont';
 ctx.imageSmoothingEnabled = false;
-//ctx.filter = "blur(0px)"
+//ctx.filter = "blur(1px)"
 
 
 var camera = {x:0, y:0};

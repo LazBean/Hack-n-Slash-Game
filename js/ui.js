@@ -55,66 +55,7 @@ function GUIHorizontalSlider(x,y,w,h, value){
 
 
 
-var buttonSpritePack = {
-	sprites : [
-		new Sprite('res/gui.png', [0,  0] , [8, 8]),
-		new Sprite('res/gui.png', [8,  0] , [8, 8]),
-		new Sprite('res/gui.png', [16, 0] , [8, 8]),
-		                                       
-		new Sprite('res/gui.png', [0,  8] , [8, 8]),
-		new Sprite('res/gui.png', [8,  8] , [8, 8]),
-		new Sprite('res/gui.png', [16, 8] , [8, 8]),
-		                                        
-		new Sprite('res/gui.png', [0, 16] , [8, 8]),
-		new Sprite('res/gui.png', [8, 16] , [8, 8]),
-		new Sprite('res/gui.png', [16,16] , [8, 8]),
-	],
-	
-	spritesH : [
-		new Sprite('res/gui.png', [0+24,  0] , [8, 8]),
-		new Sprite('res/gui.png', [8+24,  0] , [8, 8]),
-		new Sprite('res/gui.png', [16+24, 0] , [8, 8]),
-		                                        
-		new Sprite('res/gui.png', [0+24,  8] , [8, 8]),
-		new Sprite('res/gui.png', [8+24,  8] , [8, 8]),
-		new Sprite('res/gui.png', [16+24, 8] , [8, 8]),
-		                                        
-		new Sprite('res/gui.png', [0+24, 16] , [8, 8]),
-		new Sprite('res/gui.png', [8+24, 16] , [8, 8]),
-		new Sprite('res/gui.png', [16+24,16] , [8, 8]),
-	],                  
-	                    
-	spritesA : [        
-		new Sprite('res/gui.png', [0+48,  0] , [8, 8]),
-		new Sprite('res/gui.png', [8+48,  0] , [8, 8]),
-		new Sprite('res/gui.png', [16+48, 0] , [8, 8]),
-		                                       
-		new Sprite('res/gui.png', [0+48,  8] , [8, 8]),
-		new Sprite('res/gui.png', [8+48,  8] , [8, 8]),
-		new Sprite('res/gui.png', [16+48, 8] , [8, 8]),
-		                                      
-		new Sprite('res/gui.png', [0+48, 16] , [8, 8]),
-		new Sprite('res/gui.png', [8+48, 16] , [8, 8]),
-		new Sprite('res/gui.png', [16+48,16] , [8, 8]),
-	],
-}
-	
-	
-var headerSpritePack = {
-	sprites : [
-		new Sprite('res/gui.png', [0,  0] , [8, 8]),
-		new Sprite('res/gui.png', [8,  0] , [8, 8]),
-		new Sprite('res/gui.png', [16, 0] , [8, 8]),
-												
-		new Sprite('res/gui.png', [0,  8] , [8, 8]),
-		new Sprite('res/gui.png', [8,  8] , [8, 8]),
-		new Sprite('res/gui.png', [16, 8] , [8, 8]),
-												
-		new Sprite('res/gui.png', [0, 16] , [8, 8]),
-		new Sprite('res/gui.png', [8, 16] , [8, 8]),
-		new Sprite('res/gui.png', [16,16] , [8, 8]),
-	],
-}
+
 
 
 

@@ -2,9 +2,10 @@
 //
 var debugMode = false;
 var cursorTilePos = {x:0,y:0,z:0};
-
+var gameStarted = false
 //
-var player;
+
+
 var skeleton;
 var goldCount = 0;
 
@@ -30,7 +31,7 @@ var mapData = [
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
 ];
 
-//Use quadtree to optimize!
+// better try quadtree to optimize
 function getEntitiesToCollideWith(pos)
 {
 	es = []
@@ -41,6 +42,8 @@ function getEntitiesToCollideWith(pos)
 	}
 	return es;
 }
+
+var t = 0
 
 var level = {
     
@@ -55,11 +58,11 @@ var level = {
 
 
 		//MOB
-		player = new Player();
-		skeleton = new Skeleton();
-		new Skeleton();
-		new Skeleton();
-		new Skeleton();
+		
+		//skeleton = new Skeleton();
+		//new Skeleton();
+		//new Skeleton();
+		//new Skeleton();
 
 		
 		for(var i=0; i<entities.length; i++) {
@@ -91,10 +94,36 @@ var level = {
 			particles[i].update(dt);
 		}
 		
-		//CAMERA FOLLOW
-		var playerToScreen = WorldToIsometric(player.pos);
-		camera.x = playerToScreen.x-canvas.width/2;
-		camera.y = playerToScreen.y-canvas.height/2;
+		
+		if(player != undefined){
+			player.dir = {x:0, y:0, z:player.dir.z};
+
+			//Player movement
+			if(input.isDown('W')){
+				player.dir.y = 1;	
+			}
+			if(input.isDown('S')){
+				player.dir.y = -1;
+			}
+			if(input.isDown('A')){
+				player.dir.x = -1;	
+			}
+			if(input.isDown('D')){
+				player.dir.x = 1;	
+			}
+			player.dir = vectorNormalize(player.dir);
+			//jump
+			if(input.isDown('space')){
+				player.jump();
+			}
+
+			//Camera follows player
+			var playerToScreen = WorldToIsometric(player.pos);
+			camera.x = playerToScreen.x-canvas.width/2;
+			camera.y = playerToScreen.y-canvas.height/2;
+
+			network.update();
+		}
 		
     },
 	
@@ -108,9 +137,9 @@ var level = {
 
 
 
-		//DEBUG
+		// DEBUG MODE
 		if(!debugMode) return;
-		//GHOST TILE
+		// GHOST TILE
 		cursorTilePos = ScreenToIsometric(mouse);
 
 		cursorTilePos.x = Math.round(cursorTilePos.x);
@@ -132,72 +161,61 @@ var level = {
 	
 	onGUI: function(ctx){
 	
-		//Tips
+		//Control tips
 		DrawText(10, 20, 'move - WASD' + '   attack - E' + '   dodge - SPACE', "rgba(160, 160, 160, 1)");
 		
-		if(GUIButton(canvas.width-24, canvas.height-0, 24, 24)){
+		if(GUIButton(canvas.width-24, canvas.height-0, 24, 24, "O")){
 			debugMode = !debugMode;
 			audio.play('audio/hoverUI.wav');
 		}
 		
-		GUIDrawTextSprite("GOLD:"+goldCount, 100, canvas.height-4);
+		//Coins
+		//GUIDrawTextSprite("GOLD:"+goldCount, 100, canvas.height-4);
 
 		if(debugMode){
 			DrawText(mouse.x + 10, mouse.y-10, cursorTilePos.x+', '+cursorTilePos.y, "rgba(160, 160, 160, 1)");
 		}
+		
 
-		if(GUIButton(canvas.width-64, canvas.height-100, 64, 24, "Login")){
-			
-			let playerID;
-			let playerRef;
+		// DEBUG
+		//let x = 300
+		//let y = 300
+		//let xx = Math.max(mouse.x - x, 0)
+		//let yy = Math.max(y - mouse.y, 0)
+		//DrawBox(300, 300, 100, 100, "rgba(50, 50, 50, 1)")
+		//GUIDrawSlicedSprite(300,300, xx, yy, panelSpritePack.sprites)
+		//DrawCircle(mouse.x, mouse.y,1)
+		//
 
-			// MULTIPLAYER AUTH
-			firebase.auth().onAuthStateChanged((user) => {
-				console.log(user);
-				if(user){
-					//logged in!
-					playerID = user.uid;
-					playerRef = firebase.database().ref('players/'+playerID);
+		//Show players names
+		Object.keys(networkPlayerObjects).forEach((key) => {
+			let p = networkPlayerObjects[key]
+			let pos = WorldToIsometric(p.pos)
+			DrawText(pos.x-camera.x-(p.name.length*6/2), pos.y-camera.y+40, p.name, (p.color != undefined)? p.color :"rgba(160, 160, 160, 1)");
+		})
 
-					playerRef.set({
-						id: playerID,
-						name: "Bean",
-						color: "rgba(0, 0, 200, 1)",
-						x: 3,
-						y: 3,
-						coins: 0,
-					});
+		/*for(var i=0; i<players.length; i++) {
+			let p = players[i];
+			let pos = WorldToIsometric(p.pos)
+			DrawText(pos.x-camera.x-(p.name.length*6/2), pos.y-camera.y+40, p.name, (p.color != undefined)? p.color :"rgba(160, 160, 160, 1)");
+		}*/
+		
 
-					//Remove me when im disconnected
-					playerRef.onDisconnect().remove();
+		// Main Menu
+		if(gameStarted == true) return;
+		var menuRect = {x:canvas.width/2-60, y:canvas.height/2+75, w:120, h:150}
 
-					//Start game
-					//...
-				}
-				else{
-					//logged out
-				}
-			});
+		GUIDrawSlicedSprite(menuRect.x, menuRect.y, menuRect.w, menuRect.h, panelSpritePack.sprites);
+		DrawText(menuRect.x+5, menuRect.y-1, 'MENU', "rgba(60, 60, 100, 1)");
 
-			firebase.auth().signInAnonymously().catch((error) => {
-				var errorCode = error.code;
-				var errorMsg = error.message;
-				console.log(errorCode, errorMsg);
-			});
-
+		if(GUIButton(menuRect.x + menuRect.w/2-50, menuRect.y -12-20, 100, 24, "LOGIN")){
 
 			audio.play('audio/hoverUI.wav');
+			network.connect()
 		}
 
-		let p1 = WorldToIsometric(player.pos)
-		let p2 = WorldToIsometric({x:1, y:1})
-		//DrawArrow(p1.x - camera.x, p1.y - camera.y, p2.x - camera.x, p2.y - camera.y, "rgba(160, 160, 160, 1)")
+
 		
-		
-		/*var spr = new Sprite('res/gui.png', [0, 0], [8, 8], 8, [0,1,2,3], -40);
-		GUIDrawSprite(canvas.width-24, canvas.height-0, spr ,[0,0,24,24]);*/
-		
-		//fpsGraph.render(ctx);
 	}
 		
 		

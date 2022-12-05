@@ -45,12 +45,10 @@ function onMouseMove(e)
   var x = e.x * w;
   var y = e.y * h;
 
-  x -= canvas.offsetLeft * w - document.body.scrollLeft/2;
-  y -= canvas.offsetTop * h - document.body.scrollTop/2;
+  x -= canvas.offsetLeft * w - document.documentElement.scrollLeft/2;	//document.body
+  y -= canvas.offsetTop * h - document.documentElement.scrollTop/2;
 
   mouse = {x:x, y:canvas.height - y, z:0};
-  
-  //console.log(mouseWorld);
 }
 
 function onMouseDown(e){
