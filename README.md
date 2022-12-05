@@ -5,7 +5,7 @@
 This game was hosted using [GitHub Pages](https://pages.github.com/).
 
 The game is made in pure JS.  
-Graphics rendering in HTML canvas.  
+Graphics rendering in HTML Canvas.  
 Firebase is used for the server.
 
 This game is still under development, with no design document or title yet, just having fun making this prototype.
