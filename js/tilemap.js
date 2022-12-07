@@ -92,7 +92,7 @@ var tilemap = {
 	
 	
 	getTile: function(x,y){
-		if(x<0 || x>=this.width || y<0 || y>=this.height)
+		if(this.data==null || x<0 || x>=this.width || y<0 || y>=this.height)
 			return null;
 		return this.data[x][y];
 	},

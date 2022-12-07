@@ -44,6 +44,7 @@ function getEntitiesToCollideWith(pos)
 }
 
 var t = 0
+var sliderValue = 0.1;
 
 var level = {
     
@@ -122,7 +123,7 @@ var level = {
 			camera.x = playerToScreen.x-canvas.width/2;
 			camera.y = playerToScreen.y-canvas.height/2;
 
-			network.update();
+			network.updatePlayerRef();
 		}
 		
     },
@@ -135,7 +136,7 @@ var level = {
 		this.map.render(ctx);
 
 
-
+		
 
 		// DEBUG MODE
 		if(!debugMode) return;
@@ -214,7 +215,9 @@ var level = {
 			network.connect()
 		}
 
+		sliderValue = GUISlider(menuRect.x + menuRect.w/2-50, menuRect.y -100, 100, 30, sliderValue, 1, 10, 1);
 
+		
 		
 	}
 		

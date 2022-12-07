@@ -2,14 +2,14 @@
 
 
 
-function DrawText(x, y, text, color){
+function DrawText(x, y, text, color="rgba(160, 160, 160, 1)"){
 	if(x>canvas.width || x<0 || (y-fontSize)>canvas.height || (y+fontSize)<0) return;
 	
-	ctx.fillStyle = color;//"rgba(255, 255, 255, 1)";
+	ctx.fillStyle = color;
 	ctx.fillText(text, Math.round(x), canvas.height-Math.round(y-fontSize/2));
 }
 
-function DrawBox(x, y, w, h, color){
+function DrawBox(x, y, w, h, color="rgba(100, 100, 100, 1)"){
 	ctx.fillStyle = color;
 	ctx.fillRect(Math.round(x), canvas.height-Math.round(y), w, h);
 }
@@ -162,6 +162,37 @@ function GUIButton(x,y,w,h, text=null, font_color='rgba(255, 255, 255, 1)', font
 	if(text)
 		DrawText(x+ w/2-(text.length/2*8), y-h/2+4, text, curTextColor);
 	return value;
+}
+
+
+function GUISlider(x,y,w,h, v, min=0, max=1, step=0.1){
+	//GUIDrawSlicedSprite(x, y, w, h, sliderSpritePack.background);
+
+	DrawBox(x, y, w, h);
+
+	var d = (max-min);
+	
+	var s = d/step;
+	var pX = Math.clamp(v/d, min, max);
+	//console.log(v/d)
+
+	if(pointInScreenRect(mouse, x, y, w, h)){
+		
+		if(mousePressL){
+			pX = (Math.round((mouse.x - x) / d) * d) / w
+			v = min+((pX*d)/(d))*d;
+			//v = (Math.round((v) / d) * d)
+			console.log(v)	
+		}
+		if(mouseClickL){
+			value = true;
+		}
+	}
+	console.log(v)		
+
+	DrawBox(x+pX * w-5, y-h/2+10, 10, 20, 'rgba(255, 255, 255, 1)')
+
+	return v;
 }
 
 
@@ -329,5 +360,35 @@ var panel2SpritePack = {
 		new Sprite('res/gui.png', [72, 16] , [8, 8]),
 		new Sprite('res/gui.png', [72+8, 16] , [8, 8]),
 		new Sprite('res/gui.png', [72+16,16] , [8, 8]),
+	],
+}
+
+var sliderSpritePack = {
+	background : [
+		new Sprite('res/gui.png', [48,  56] , [8, 3]),
+		new Sprite('res/gui.png', [48+8,  56] , [8, 3]),
+		new Sprite('res/gui.png', [48+16, 56] , [8, 3]),
+												
+		new Sprite('res/gui.png', [48,  56+3] , [8, 2]),
+		new Sprite('res/gui.png', [48+8,  56+3] , [8, 2]),
+		new Sprite('res/gui.png', [48+16, 56+3] , [8, 2]),
+												
+		new Sprite('res/gui.png', [48, 56+4] , [8, 3]),
+		new Sprite('res/gui.png', [48+8, 56+4] , [8, 3]),
+		new Sprite('res/gui.png', [48+16,56+4] , [8, 3]),
+	],
+
+	handle : [
+		new Sprite('res/gui.png', [48,  56] , [8, 3]),
+		new Sprite('res/gui.png', [48+8,  56] , [8, 3]),
+		new Sprite('res/gui.png', [48+16, 56] , [8, 3]),
+												
+		new Sprite('res/gui.png', [48,  56+3] , [8, 2]),
+		new Sprite('res/gui.png', [48+8,  56+3] , [8, 2]),
+		new Sprite('res/gui.png', [48+16, 56+3] , [8, 2]),
+												
+		new Sprite('res/gui.png', [48, 56+4] , [8, 3]),
+		new Sprite('res/gui.png', [48+8, 56+4] , [8, 3]),
+		new Sprite('res/gui.png', [48+16,56+4] , [8, 3]),
 	],
 }

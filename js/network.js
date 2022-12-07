@@ -1,20 +1,39 @@
 
 var player;
-var players = {};
+var networkPlayers = {};
 var networkPlayerObjects = {};
+
+var networkEnemies = {};
+var networkEnemyObjects = {};
 
 (function() {
     
 	let playerID;
 	let playerRef;
 
-	function update(){
-		if(player == null || players[playerID] == undefined) return;
-		players[playerID].x = player.pos.x;
-		players[playerID].y = player.pos.y;
+	function updatePlayerRef(){
+		if(player == null || networkPlayers[playerID] == undefined) return;
 
-		playerRef.set(players[playerID]);
+		networkPlayers[playerID].pos = player.pos;
+		networkPlayers[playerID].dir = player.dir;
+
+		//playerRef.set(networkPlayers[playerID]);
+		playerRef.update({
+			pos: player.pos,
+			dir: player.dir,
+		})
 	}
+
+	function addEnemy(){
+		let id = 0
+		enemyRef = firebase.database().ref(`enemies/${id}`);
+		enemyRef.set({
+			x:2,
+			y:2,
+		});
+	}
+
+	
 
     function connect() {
 
@@ -24,14 +43,15 @@ var networkPlayerObjects = {};
 			if(user){
 				//logged in!
 				playerID = user.uid;
-				playerRef = firebase.database().ref('players/'+playerID);
+				playerRef = firebase.database().ref(`players/${playerID}`);
 
 				playerRef.set({
 					id: playerID,
 					name: "Bean",
 					color: colorStr(randomRange(50,255), randomRange(50,255), randomRange(50,255), 1),
-					x: 3,
-					y: 3,
+
+					pos: {x:0, y:0, z:0},
+					dir: {x:0, y:0, z:0},
 					coins: 0,
 				});
 
@@ -41,17 +61,18 @@ var networkPlayerObjects = {};
 				//Start game
 				//...
 				const allPlayersRef = firebase.database().ref('players');
-				const allCoinsRef = firebase.database().ref('coins');
+				const allEnemiesRef = firebase.database().ref('enemies');
 
 				allPlayersRef.on("value", (snapshot) => {
 					//Whenever a change occurs
-					players = snapshot.val() || {};
-					Object.keys(players).forEach((key) => {
-						const characterState = players[key]
+					networkPlayers = snapshot.val() || {};
+					Object.keys(networkPlayers).forEach((key) => {
+						const characterState = networkPlayers[key]
+
 						p = networkPlayerObjects[key]
 						p.name = characterState.name;
 						p.color = characterState.color;
-						p.pos = {x:characterState.x, y:characterState.y, z:0}
+						p.pos = characterState.pos
 					})
 					
 				})
@@ -59,16 +80,41 @@ var networkPlayerObjects = {};
 				allPlayersRef.on("child_added", (snapshot) => {
 					//Whenever a new node is added the tree
 					const addedPlayer = snapshot.val();
-					character = new Player(addedPlayer.name);
-					character.color = addedPlayer.color
+					playerObj = new Player(addedPlayer.name);
+					playerObj.color = addedPlayer.color
 					
 					if(addedPlayer.id === playerID){
-						player = character;
-						console.log(player)
+						player = playerObj;
 					}
 					
-					networkPlayerObjects[addedPlayer.id] = character;
+					networkPlayerObjects[addedPlayer.id] = playerObj;
 				})
+
+				allPlayersRef.on("child_removed", (snapshot) => {
+					//Whenever a node is removed from the tree
+					const removedKey = snapshot.val().id;
+					//Remove player object(entity)
+					networkPlayerObjects[removedKey].remove();
+					delete networkPlayerObjects[removedKey];
+				})
+
+
+				allEnemiesRef.on("child_added", (snapshot) => {
+					//Whenever a new node is added the tree
+					const addedEnemy = snapshot.val();
+					enemyObj = new Skeleton("skeleton "+networkEnemies.length + 1);
+					
+					networkEnemyObjects[addedPlayer.id] = enemyObj;
+				})
+
+				allEnemiesRef.on("child_removed", (snapshot) => {
+					//Whenever a node is removed from the tree
+					const removedKey = snapshot.val().id;
+					//Remove player object(entity)
+					networkEnemyObjects[removedKey].remove();
+					delete networkEnemyObjects[removedKey];
+				})
+
 				//...
 				gameStarted = true;
 				
@@ -87,7 +133,7 @@ var networkPlayerObjects = {};
 
 	window.network = { 
         connect: connect,
-		update: update,
+		updatePlayerRef: updatePlayerRef,
     };
 
 })();

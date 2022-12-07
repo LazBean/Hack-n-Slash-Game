@@ -12,6 +12,11 @@ class Entity
 		
 		entities.push(this);
 	}
+
+	remove() 
+	{
+		entities.remove(this);
+	}
          
 	update(dt) 
 	{
