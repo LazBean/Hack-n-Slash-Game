@@ -100,6 +100,12 @@ function random()
     return randomFRange(0.,1.);
 }
 
+function nearest(value, min, max, steps) {
+	var zerone = Math.round((value - min) * steps / (max - min)) / steps; // bring to 0-1 range    
+	zerone = Math.min(Math.max(zerone, 0), 1) // keep in range in case value is off limits
+	return zerone * (max - min) + min;
+}
+
 function vectorDir(v1, v2) 
 {
     return {x:v2.x-v1.x, y:v2.y-v1.y, z:v2.z-v1.z};

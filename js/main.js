@@ -18,8 +18,20 @@ ctx.font = fontSize+'px pixelfont';
 ctx.imageSmoothingEnabled = false;
 //ctx.filter = "blur(1px)"
 
+var camera = {x:-canvas.width/2, y:-canvas.height/4};
 
-var camera = {x:0, y:0};
+
+//INIT RESOURCES
+resources.load([
+	'res/tiles.png',
+	'res/gui.png',
+	'res/font.png',
+	'res/player.png',
+	'res/skeleton.png',
+	'res/misc.png',
+	'res/slash.png',
+]);
+resources.onReady(init);
 
 
 
@@ -36,9 +48,22 @@ var requestAnimFrame = (function(){
 })();
 
 
+//=========
+var gameTime = 0;
 
 var lastTime;
 var dt;
+
+//Init
+function init() {
+  
+	level.start();
+	
+    lastTime = Date.now();
+    main();
+}
+
+//Main Loop
 function main() {
     var now = Date.now();
     dt = (now - lastTime) / 1000.0;
@@ -51,6 +76,13 @@ function main() {
 	
 	lastTime = now;
     requestAnimFrame(main);
+};
+
+//UPDATE
+function update(dt) {
+    gameTime += dt;
+		
+	level.update(dt);
 };
 
 //FPS COUNTER
@@ -77,46 +109,6 @@ function TakeFPS(dt)
 	DrawBox(0,canvas.height,60,15, "rgba(0, 0, 0, 0.5)");
 	DrawText(5, canvas.height-3, 'FPS ' + fps.toFixed(2), "rgba(160, 160, 160, 1)");
 }
-
-
-
-//^^^^^^^^^^^^^^^^^^^^^^^
-
-var gameTime = 0;
-
-//INIT
-function init() {
-  
-	level.start();
-	
-    lastTime = Date.now();
-    main();
-}
-
-
-
-
-//INIT RESOURCES
-resources.load([
-	'res/tiles.png',
-	'res/gui.png',
-	'res/font.png',
-	'res/player.png',
-	'res/skeleton.png',
-	'res/misc.png',
-]);
-resources.onReady(init);
-
-
-
-//UPDATE
-function update(dt) {
-    gameTime += dt;
-		
-	level.update(dt);
-};
-
-
 
 
 
@@ -206,4 +198,30 @@ function renderEntity(e){
 	e.sprite.render(ctx);
 	ctx.restore();
 }
+
+
+
+//console.log(getImageData(resources.get('res/tiles.png')))
+function getImageData( image ) {
+
+    var canvas = document.createElement( 'canvas' );
+    canvas.width = image.width;
+    canvas.height = image.height;
+
+    var context = canvas.getContext( '2d' );
+    context.drawImage( image, 0, 0 );
+
+    return context.getImageData( 0, 0, image.width, image.height );
+
+}
+
+function getPixel( imagedata, x, y ) {
+
+    var position = ( x + imagedata.width * y ) * 4, data = imagedata.data;
+    return { r: data[ position ], g: data[ position + 1 ], b: data[ position + 2 ], a: data[ position + 3 ] };
+
+}
+
+//var imagedata = getImageData( imgTexture.image );
+//var color = getPixel( imagedata, 10, 10 );
 

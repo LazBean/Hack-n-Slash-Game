@@ -17,7 +17,7 @@
 
     Sprite.prototype = {
         update: function(dt) {
-            this._index += this.speed*dt;
+            this._index = this._index + this.speed*dt || 0;
         },
 
         render: function(ctx) {

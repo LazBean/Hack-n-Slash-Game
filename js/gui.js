@@ -160,7 +160,7 @@ function GUIButton(x,y,w,h, text=null, font_color='rgba(255, 255, 255, 1)', font
 	GUIDrawSlicedSprite(x, y, w, h, sprites);
 	
 	if(text)
-		DrawText(x+ w/2-(text.length/2*8), y-h/2+4, text, curTextColor);
+		DrawText(x+ w/2-(text.length/2*6), y-h/2+4, text, curTextColor);
 	return value;
 }
 
@@ -173,22 +173,28 @@ function GUISlider(x,y,w,h, v, min=0, max=1, step=0.1){
 	var d = (max-min);
 	
 	var s = d/step;
-	var pX = Math.clamp(v/d, min, max);
-	//console.log(v/d)
+	var pX = v - min;
+	
+	v = nearest(v, min, max, s);
+	console.log(`v:${v}, d:${s} = ${pX}`)
 
 	if(pointInScreenRect(mouse, x, y, w, h)){
 		
 		if(mousePressL){
+			
 			pX = (Math.round((mouse.x - x) / d) * d) / w
 			v = min+((pX*d)/(d))*d;
+
+			nearest(v, min, max, s);
+
 			//v = (Math.round((v) / d) * d)
-			console.log(v)	
+			//console.log(pX)	
 		}
 		if(mouseClickL){
 			value = true;
 		}
 	}
-	console.log(v)		
+	//console.log(v)		
 
 	DrawBox(x+pX * w-5, y-h/2+10, 10, 20, 'rgba(255, 255, 255, 1)')
 

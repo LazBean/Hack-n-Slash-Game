@@ -168,5 +168,17 @@ class Player extends Entity
 			sprite: new Sprite('res/misc.png', [0, 0], [16, 8],0,[0]),
 			depth: -(this.pos.y+this.pos.x)*10+1,
 		});
+
+
+		if(!this.isActing) return;
+		let sPos = WorldToIsometric(this.pos)
+		sPos.y += 16
+		let sSprite = new Sprite('res/slash.png', [0, 0], [48, 32],0,[0,1,2,3]);
+		//slash
+		renderData.push({
+			pos: sPos,
+			sprite: sSprite,
+			depth: -(this.pos.y+this.pos.x)*10+1,
+		});
 	}
 }

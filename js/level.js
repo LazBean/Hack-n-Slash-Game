@@ -44,7 +44,7 @@ function getEntitiesToCollideWith(pos)
 }
 
 var t = 0
-var sliderValue = 0.1;
+var sliderValue = 0.8;
 
 var level = {
     
@@ -60,7 +60,7 @@ var level = {
 
 		//MOB
 		
-		//skeleton = new Skeleton();
+		skeleton = new Skeleton();
 		//new Skeleton();
 		//new Skeleton();
 		//new Skeleton();
@@ -165,7 +165,7 @@ var level = {
 		//Control tips
 		DrawText(10, 20, 'move - WASD' + '   attack - E' + '   dodge - SPACE', "rgba(160, 160, 160, 1)");
 		
-		if(GUIButton(canvas.width-24, canvas.height-0, 24, 24, "O")){
+		if(GUIButton(canvas.width-24, canvas.height-0, 24, 24, "E")){
 			debugMode = !debugMode;
 			audio.play('audio/hoverUI.wav');
 		}
@@ -209,13 +209,13 @@ var level = {
 		GUIDrawSlicedSprite(menuRect.x, menuRect.y, menuRect.w, menuRect.h, panelSpritePack.sprites);
 		DrawText(menuRect.x+5, menuRect.y-1, 'MENU', "rgba(60, 60, 100, 1)");
 
-		if(GUIButton(menuRect.x + menuRect.w/2-50, menuRect.y -12-20, 100, 24, "LOGIN")){
+		if(GUIButton(menuRect.x + menuRect.w/2-50, menuRect.y -12-20, 100, 24, "Connect")){
 
 			audio.play('audio/hoverUI.wav');
 			network.connect()
 		}
 
-		sliderValue = GUISlider(menuRect.x + menuRect.w/2-50, menuRect.y -100, 100, 30, sliderValue, 1, 10, 1);
+		sliderValue = GUISlider(menuRect.x + menuRect.w/2-50, menuRect.y -100, 100, 30, sliderValue, 0.5, 1, 0.1);
 
 		
 		
@@ -307,29 +307,7 @@ var light = function(xx,yy,w,h){
 
 
 
-////
-function getImageData( image ) {
 
-    var canvas = document.createElement( 'canvas' );
-    canvas.width = image.width;
-    canvas.height = image.height;
-
-    var context = canvas.getContext( '2d' );
-    context.drawImage( image, 0, 0 );
-
-    return context.getImageData( 0, 0, image.width, image.height );
-
-}
-
-function getPixel( imagedata, x, y ) {
-
-    var position = ( x + imagedata.width * y ) * 4, data = imagedata.data;
-    return { r: data[ position ], g: data[ position + 1 ], b: data[ position + 2 ], a: data[ position + 3 ] };
-
-}
-
-//var imagedata = getImageData( imgTexture.image );
-//var color = getPixel( imagedata, 10, 10 );
 
 
 
