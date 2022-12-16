@@ -1,5 +1,5 @@
 
-class Skeleton extends Entity 
+class Skeleton extends Living 
 {
 
 	constructor(name) 

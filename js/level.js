@@ -59,7 +59,8 @@ var level = {
 
 
 		//MOB
-		
+		gameStarted = true;
+		player = new Player()
 		skeleton = new Skeleton();
 		//new Skeleton();
 		//new Skeleton();
@@ -97,25 +98,29 @@ var level = {
 		
 		
 		if(player != undefined){
-			player.dir = {x:0, y:0, z:player.dir.z};
+			let dir = {x:0, y:0, z:player.dir.z};
 
 			//Player movement
 			if(input.isDown('W')){
-				player.dir.y = 1;	
+				dir.y = 1;	
 			}
 			if(input.isDown('S')){
-				player.dir.y = -1;
+				dir.y = -1;
 			}
 			if(input.isDown('A')){
-				player.dir.x = -1;	
+				dir.x = -1;	
 			}
 			if(input.isDown('D')){
-				player.dir.x = 1;	
+				dir.x = 1;	
 			}
-			player.dir = vectorNormalize(player.dir);
+			player.dir = vectorNormalize(dir);
 			//jump
 			if(input.isDown('space')){
 				player.jump();
+			}
+			//attack
+			if(input.isDown('e')){
+				player.attack();
 			}
 
 			//Camera follows player
@@ -177,6 +182,7 @@ var level = {
 			DrawText(mouse.x + 10, mouse.y-10, cursorTilePos.x+', '+cursorTilePos.y, "rgba(160, 160, 160, 1)");
 		}
 		
+		
 
 		// DEBUG
 		//let x = 300
@@ -194,6 +200,16 @@ var level = {
 			let pos = WorldToIsometric(p.pos)
 			DrawText(pos.x-camera.x-(p.name.length*6/2), pos.y-camera.y+40, p.name, (p.color != undefined)? p.color :"rgba(160, 160, 160, 1)");
 		})
+
+		
+		//Draw oval under Player
+		/*if(player != null){
+			let p = WorldToIsometric(player.pos)
+
+			let r = 10;
+			DrawOval(p.x-camera.x, p.y-camera.y, r, r/2, 'rgba(255, 255, 255, 1)', false);
+		}*/
+		
 
 		/*for(var i=0; i<players.length; i++) {
 			let p = players[i];

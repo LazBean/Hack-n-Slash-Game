@@ -5,17 +5,13 @@ class Entity
 	constructor(name="?") 
 	{
 		this.name = name;
-		this.speed = 0;
-		this.dir = {x:0, y:0, z:0};
-		this.pos = {x:0, y:0, z:0};
 		this.sprite = new Sprite('res/tiles.png', [0, 80], [24, 32], 8, [0,1,0,2]);
+
+		this.speed = 0;
+		this.pos = {x:0, y:0, z:0};
+		this.dir = {x:0, y:0, z:0};
 		
 		entities.push(this);
-	}
-
-	remove() 
-	{
-		entities.remove(this);
 	}
          
 	update(dt) 
@@ -32,11 +28,16 @@ class Entity
   
 	remove()
 	{
-		var index = entities.indexOf(this);
+		/*var index = entities.indexOf(this);
 		if (index > -1) 
 		{
 			entities.splice(index, 1);
-		}
+		}*/
+		entities.remove(this);
+	}
+
+	move(){
+		
 	}
 
 	collision(){
@@ -56,6 +57,40 @@ class Entity
 
 	collisionTilemap(){
 		
+	}
+}
+
+
+class Living extends Entity 
+{
+
+	constructor(name) 
+	{
+		super(name);
+
+		this.maxHealth = 10;
+		this.health = this.maxHealth;
+		this.alive = true;
+	}
+	
+	update(dt) {
+		super.update(dt);
+	}
+
+	render(ctx){
+		super.render(ctx);
+	}
+
+	setDamage(dmg){
+		this.health -= dmg.value;
+		
+		if(this.health <= 0)
+			this.death();
+
+	}
+
+	death(){
+		this.alive = false;
 	}
 }
 

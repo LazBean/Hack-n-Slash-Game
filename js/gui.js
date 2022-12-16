@@ -6,6 +6,8 @@ function DrawText(x, y, text, color="rgba(160, 160, 160, 1)"){
 	if(x>canvas.width || x<0 || (y-fontSize)>canvas.height || (y+fontSize)<0) return;
 	
 	ctx.fillStyle = color;
+	//ctx.textAlign = 'center';
+	//ctx.textBaseline = 'middle';
 	ctx.fillText(text, Math.round(x), canvas.height-Math.round(y-fontSize/2));
 }
 
@@ -208,17 +210,40 @@ function GUISlider(x,y,w,h, v, min=0, max=1, step=0.1){
 
 
 //OPTIONAL
-function DrawCircle(x, y, r, c){
+function DrawCircle(x, y, r, c, filled = true){
+	x = x + 0;
+	y = (canvas.height - y) + 0;
+
+	ctx.beginPath();
+	ctx.arc(x, y, r, 0, Math.PI*2, false);
+	if(filled){
+		ctx.fillStyle = c;
+		ctx.fill();
+	}
+	else{
+		ctx.strokeStyle = c;
+		ctx.stroke();
+	}
+	ctx.closePath();
+}
+
+function DrawOval(x, y, rX, rY, c, filled = true){
 	x = x + 0;
 	y = (canvas.height - y) + 0;
 
 	//r = r / scale;
 
 	ctx.beginPath();
-	ctx.arc(x, y, r, 0, Math.PI*2, false);
+	ctx.ellipse(x, y, rX, rY, 0, Math.PI*2, false);
 	
-	ctx.fillStyle = c;
-	ctx.fill();
+	if(filled){
+		ctx.fillStyle = c;
+		ctx.fill();
+	}
+	else{
+		ctx.strokeStyle = c;
+		ctx.stroke();
+	}
 	ctx.closePath();
 }
 

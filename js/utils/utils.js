@@ -26,6 +26,123 @@ function collidesCircles(posA, rA, posB, rB){
 	return {isCollides:overlap<0, normal:normal, overlap:overlap};
 }
 
+function collidesCircleRect(circle, rect){
+
+	// Calculate the distance between the center of the circle and the rectangle
+	let distX = Math.abs(circle.x - rect.x - rect.w / 2);
+	let distY = Math.abs(circle.y - rect.y - rect.h / 2);
+  
+	// If the distance is greater than half the rectangle's width or height, the circle is too far away and there is no collision
+	if (distX > rect.w / 2 + circle.r || distY > rect.h / 2 + circle.r) {
+	  	return {isCollides:false};
+	}
+  
+	let normal = {x: 0, y: 0};
+	// If the distance is less than half the rectangle's width or height, the circle is within the rectangle and there is a collision
+	if (distX <= rect.w / 2) {
+		normal.x = (circle.x > rect.x + rect.w / 2) ? 1 : -1;
+	}
+	if (distY <= rect.h / 2) {
+		normal.y = (circle.y > rect.y + rect.h / 2) ? 1 : -1;
+	}
+
+	return {isCollides: true, normal: normal};
+}
+
+
+function rectCircleColliding(circle,rect){
+    var distX = Math.abs(circle.x - rect.x-rect.w/2);
+    var distY = Math.abs(circle.y - rect.y-rect.h/2);
+
+    if (distX > (rect.w/2 + circle.r)) { return false; }
+    if (distY > (rect.h/2 + circle.r)) { return false; }
+
+    if (distX <= (rect.w/2)) { return true; } 
+    if (distY <= (rect.h/2)) { return true; }
+
+    var dx=distX-rect.w/2;
+    var dy=distY-rect.h/2;
+    return (dx*dx+dy*dy<=(circle.r*circle.r));
+}
+
+
+function getRectClosestSideNormal(rect, point) {
+
+	// Calculate the distances from the point to each side of the rectangle
+	let side1 = Math.abs(point.x - rect.x); // Distance to left side
+	let side2 = Math.abs(point.x - (rect.x + rect.w)); // Distance to right side
+	let side3 = Math.abs(point.y - rect.y); // Distance to top side
+	let side4 = Math.abs(point.y - (rect.y + rect.h)); // Distance to bottom side
+  
+	// Find the side with the minimum distance from the point
+	let minSide = 1;
+	let minDistance = side1;
+	if (side2 < minDistance) {
+	  minSide = 2;
+	  minDistance = side2;
+	}
+	if (side3 < minDistance) {
+	  minSide = 3;
+	  minDistance = side3;
+	}
+	if (side4 < minDistance) {
+	  minSide = 4;
+	  minDistance = side4;
+	}
+  
+	// Calculate the normal vector of the side with the minimum distance
+	let normal = {};
+	if (minSide === 1) {
+	  // Left side
+	  normal = { x: -1, y: 0 };
+	} else if (minSide === 2) {
+	  // Right side
+	  normal = { x: 1, y: 0 };
+	} else if (minSide === 3) {
+	  // Top side
+	  normal = { x: 0, y: -1 };
+	} else if (minSide === 4) {
+	  // Bottom side
+	  normal = { x: 0, y: 1 };
+	}
+  
+	return normal;
+}
+
+function reflectVector(dir, normal) {
+
+	mV = Math.hypot(dir.x, dir.y);
+	mN = Math.hypot(normal.x, normal.y);
+
+	let dot = dir.x * normal.x + dir.y * normal.y;
+	console.log(dot);
+
+	return {
+		x:dir.x-2*dot*normal.x, 
+		y:dir.y-2*dot*normal.y
+	}
+  
+	// Calculate the dot product of the moving vector and the normal vector
+	//let dotProduct = movingVector.x * normalVector.x + movingVector.y * normalVector.y;
+  
+	// If the angle between the moving vector and the normal vector is less than 90 degrees, reflect the moving vector across the normal vector
+	/*if (dotProduct > 0) {
+	  let reflectedVector = {
+		x: movingVector.x - 2 * dotProduct * normalVector.x,
+		y: movingVector.y - 2 * dotProduct * normalVector.y,
+	  };
+  
+	  // Update the position of the circle using the reflected vector
+	  return reflectedVector;
+	}
+
+	return dir;*/
+}
+
+dotProduct = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
+
+
+
 function pointInBox(pos, pos2, size){
 	var w = size/2;
 	var x1 = (pos2[0]-w);
@@ -60,22 +177,8 @@ function pointInScreenRect(pos, x, y, w, h)
 	return (x1<=px) && (px<=x2) && (y1<=py) && (py<=y2);
 }
 
-//var circle={x:100,y:290,r:10};
-//var rect={x:100,y:100,w:40,h:100};
-function rectCircleColliding(circle,rect){
-    var distX = Math.abs(circle.x - rect.x-rect.w/2);
-    var distY = Math.abs(circle.y - rect.y-rect.h/2);
 
-    if (distX > (rect.w/2 + circle.r)) { return false; }
-    if (distY > (rect.h/2 + circle.r)) { return false; }
 
-    if (distX <= (rect.w/2)) { return true; } 
-    if (distY <= (rect.h/2)) { return true; }
-
-    var dx=distX-rect.w/2;
-    var dy=distY-rect.h/2;
-    return (dx*dx+dy*dy<=(circle.r*circle.r));
-}
 
 
 
