@@ -31,7 +31,7 @@ function collidesCircleRect(circle, rect){
 	// Calculate the distance between the center of the circle and the rectangle
 	let distX = Math.abs(circle.x - rect.x - rect.w / 2);
 	let distY = Math.abs(circle.y - rect.y - rect.h / 2);
-  
+
 	// If the distance is greater than half the rectangle's width or height, the circle is too far away and there is no collision
 	if (distX > rect.w / 2 + circle.r || distY > rect.h / 2 + circle.r) {
 	  	return {isCollides:false};
@@ -39,10 +39,10 @@ function collidesCircleRect(circle, rect){
   
 	let normal = {x: 0, y: 0};
 	// If the distance is less than half the rectangle's width or height, the circle is within the rectangle and there is a collision
-	if (distX <= rect.w / 2) {
+	if (distX >= rect.w / 2) {
 		normal.x = (circle.x > rect.x + rect.w / 2) ? 1 : -1;
 	}
-	if (distY <= rect.h / 2) {
+	if (distY >= rect.h / 2) {
 		normal.y = (circle.y > rect.y + rect.h / 2) ? 1 : -1;
 	}
 
@@ -50,60 +50,30 @@ function collidesCircleRect(circle, rect){
 }
 
 
-function rectCircleColliding(circle,rect){
-    var distX = Math.abs(circle.x - rect.x-rect.w/2);
-    var distY = Math.abs(circle.y - rect.y-rect.h/2);
-
-    if (distX > (rect.w/2 + circle.r)) { return false; }
-    if (distY > (rect.h/2 + circle.r)) { return false; }
-
-    if (distX <= (rect.w/2)) { return true; } 
-    if (distY <= (rect.h/2)) { return true; }
-
-    var dx=distX-rect.w/2;
-    var dy=distY-rect.h/2;
-    return (dx*dx+dy*dy<=(circle.r*circle.r));
-}
-
 
 function getRectClosestSideNormal(rect, point) {
 
-	// Calculate the distances from the point to each side of the rectangle
-	let side1 = Math.abs(point.x - rect.x); // Distance to left side
-	let side2 = Math.abs(point.x - (rect.x + rect.w)); // Distance to right side
-	let side3 = Math.abs(point.y - rect.y); // Distance to top side
-	let side4 = Math.abs(point.y - (rect.y + rect.h)); // Distance to bottom side
+	// Calculate the distances between the point and each of the four sides of the rectangle
+	var topDistance = Math.abs((point.y - rect.y) - rect.h / 2);
+	var bottomDistance = Math.abs((point.y - rect.y) + rect.h / 2);
+	var leftDistance = Math.abs((point.x - rect.x) - rect.w / 2);
+	var rightDistance = Math.abs((point.x - rect.x) + rect.w / 2);
   
-	// Find the side with the minimum distance from the point
-	let minSide = 1;
-	let minDistance = side1;
-	if (side2 < minDistance) {
-	  minSide = 2;
-	  minDistance = side2;
-	}
-	if (side3 < minDistance) {
-	  minSide = 3;
-	  minDistance = side3;
-	}
-	if (side4 < minDistance) {
-	  minSide = 4;
-	  minDistance = side4;
-	}
-  
-	// Calculate the normal vector of the side with the minimum distance
-	let normal = {};
-	if (minSide === 1) {
-	  // Left side
-	  normal = { x: -1, y: 0 };
-	} else if (minSide === 2) {
-	  // Right side
-	  normal = { x: 1, y: 0 };
-	} else if (minSide === 3) {
+	// Select the side with the minimum distance
+	var minDistance = Math.min(topDistance, bottomDistance, leftDistance, rightDistance);
+	var normal = {};
+	if (minDistance == topDistance) {
 	  // Top side
 	  normal = { x: 0, y: -1 };
-	} else if (minSide === 4) {
+	} else if (minDistance == bottomDistance) {
 	  // Bottom side
 	  normal = { x: 0, y: 1 };
+	} else if (minDistance == leftDistance) {
+	  // Left side
+	  normal = { x: -1, y: 0 };
+	} else {
+	  // Right side
+	  normal = { x: 1, y: 0 };
 	}
   
 	return normal;
@@ -141,6 +111,10 @@ function reflectVector(dir, normal) {
 
 dotProduct = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
 
+function posInBounds(pos, size){
+	return Math.round(pos.x) >= 0 && Math.round(pos.x) < size.w &&
+			Math.round(pos.y) >= 0 && Math.round(pos.y) < size.h
+}
 
 
 function pointInBox(pos, pos2, size){
@@ -241,7 +215,11 @@ function vectorRotate(v, ang)
     ang = -ang * (Math.PI/180);
     var cos = Math.cos(ang);
     var sin = Math.sin(ang);
-    return {x:Math.round(10000*(v.x * cos - v.y * sin))/10000, y: Math.round(10000*(v.x * sin + v.y * cos))/10000, z:v.z};
+    return {
+		x: Math.round(10000*(v.x * cos - v.y * sin))/10000, 
+		y: Math.round(10000*(v.x * sin + v.y * cos))/10000, 
+		z: v.z
+	};
 };
 
 function Distance(a, b)

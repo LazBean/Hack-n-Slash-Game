@@ -45,14 +45,12 @@ class Skeleton extends Living
 					
 				}
 			}
-			//console.log(tiles)
-			var graph = new Graph(tiles);
 			
+			var graph = new Graph(tiles);
+			console.log()
 			if(
-				Math.round(this.pos.x) >= 0 && Math.round(this.pos.x) < graph.width &&
-				Math.round(this.pos.y) >= 0 && Math.round(this.pos.y) < graph.height &&
-				Math.round(player.pos.x) >= 0 && Math.round(player.pos.x) < graph.width &&
-				Math.round(player.pos.y) >= 0 && Math.round(player.pos.y) < graph.height 
+				posInBounds(this.pos, {w:level.map.width, h:level.map.height}) &&
+				posInBounds(player.pos, {w:level.map.width, h:level.map.height})
 			){
 
 				var start = graph.grid[Math.round(this.pos.x)][Math.round(this.pos.y)];
@@ -62,7 +60,7 @@ class Skeleton extends Living
 				//console.log(start+" -> "+end + " = " +result)
 
 				if(result.length > 0){
-					this.path = result
+					this.path = result;
 				}
 			}
 			
@@ -71,6 +69,7 @@ class Skeleton extends Living
 		}
 
 		if(this.path.length > 0){
+			//console.log(this.path)
 			var vd = {x:this.path[0].x-this.pos.x, y:this.path[0].y-this.pos.y, z:this.dir.z};
 			var d = vectorLength(vd)
 			this.dir = vectorNormalize(vd)

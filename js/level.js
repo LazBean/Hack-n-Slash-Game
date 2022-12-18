@@ -6,7 +6,7 @@ var gameStarted = false
 //
 
 
-var skeleton;
+var skeletons = [];
 var goldCount = 0;
 
 var entities = [];
@@ -61,7 +61,14 @@ var level = {
 		//MOB
 		gameStarted = true;
 		player = new Player()
-		skeleton = new Skeleton();
+
+		for(var i=0; i<3; i++) {
+			let s = new Skeleton();
+			s.health = randomRange(1, s.maxHealth);
+			skeletons.push(s);
+		}
+		
+		
 		//new Skeleton();
 		//new Skeleton();
 		//new Skeleton();
@@ -97,6 +104,7 @@ var level = {
 		}
 		
 		
+		//Player controller
 		if(player != undefined){
 			let dir = {x:0, y:0, z:player.dir.z};
 
@@ -113,7 +121,21 @@ var level = {
 			if(input.isDown('D')){
 				dir.x = 1;	
 			}
-			player.dir = vectorNormalize(dir);
+			dir = vectorRotate(dir, 45);
+			dir = vectorNormalize(dir);
+
+			if(!player.isActing){
+				player.vel = {
+					x:dir.x * player.speed, 
+					y:dir.y * player.speed, 
+					z:dir.z,
+				};
+
+				player.dir = dir;
+			}
+				
+				
+
 			//jump
 			if(input.isDown('space')){
 				player.jump();
@@ -181,6 +203,10 @@ var level = {
 		if(debugMode){
 			DrawText(mouse.x + 10, mouse.y-10, cursorTilePos.x+', '+cursorTilePos.y, "rgba(160, 160, 160, 1)");
 		}
+
+		
+		
+		
 		
 		
 
@@ -192,6 +218,8 @@ var level = {
 		//DrawBox(300, 300, 100, 100, "rgba(50, 50, 50, 1)")
 		//GUIDrawSlicedSprite(300,300, xx, yy, panelSpritePack.sprites)
 		//DrawCircle(mouse.x, mouse.y,1)
+		DrawText(10, 50, 'Player Pos: ' + player.pos.x.toFixed(2) + ", " + player.pos.y.toFixed(2), "rgba(160, 160, 160, 1)");
+		DrawText(10, 40, 'Player Dir: ' + player.dir.x.toFixed(2) + ", " + player.dir.y.toFixed(2), "rgba(160, 160, 160, 1)");
 		//
 
 		//Show players names
@@ -200,6 +228,17 @@ var level = {
 			let pos = WorldToIsometric(p.pos)
 			DrawText(pos.x-camera.x-(p.name.length*6/2), pos.y-camera.y+40, p.name, (p.color != undefined)? p.color :"rgba(160, 160, 160, 1)");
 		})
+
+
+		//Enemy health bar
+		for(var i=0; i<skeletons.length; i++){
+			let pos = WorldToIsometric(skeletons[i].pos);
+			
+			let ws = 15;
+			DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws, 2, "rgba(50, 50, 50, 1)");
+			let w = skeletons[i].health / skeletons[i].maxHealth;
+			DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws * w, 2, "rgba(250, 50, 50, 1)");
+		}
 
 		
 		//Draw oval under Player

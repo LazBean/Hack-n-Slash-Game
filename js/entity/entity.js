@@ -9,6 +9,7 @@ class Entity
 
 		this.speed = 0;
 		this.pos = {x:0, y:0, z:0};
+		this.vel = {x:0, y:0, z:0};
 		this.dir = {x:0, y:0, z:0};
 		
 		entities.push(this);
