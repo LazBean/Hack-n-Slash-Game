@@ -71,7 +71,7 @@ class Skeleton extends Living
 		if(this.path.length > 0){
 			//console.log(this.path)
 			var vd = {x:this.path[0].x-this.pos.x, y:this.path[0].y-this.pos.y, z:this.dir.z};
-			var d = vectorLength(vd)
+			var d = vectorMagnitude(vd)
 			this.dir = vectorNormalize(vd)
 
 			if(d <= 0.5)
@@ -96,6 +96,15 @@ class Skeleton extends Living
 		
 		this.sprite.update(dt);
 		//console.log(this.sprite._index);
+	}
+
+	death(){
+		super.death();
+
+		var index = enemies.indexOf(this);
+		if (index > -1)	enemies.splice(index, 1);
+
+		super.remove();
 	}
 
 	render(ctx)

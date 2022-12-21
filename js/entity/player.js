@@ -14,6 +14,7 @@ class Player extends Living
 		this.pos = {x:4 + randomFRange(0,8), y:4 + randomFRange(0,8), z:0};
 		this.vel = {x:0, y:0, z:0};
 		this.dir = {x:0, y:0, z:0};
+		this.lookDir = {x:1, y:0, z:0};
 		
 		
 		this.timer = 0;
@@ -54,12 +55,21 @@ class Player extends Living
 		this.curFrame = 0;
 		this.sprite.pos = [0,96 + 32*this.attackIndx];	this.sprite.size = [48,32]
 		
-		this.dir = {x:0, y:0, z:this.dir.z};
 		this.vel = {x:0, y:0, z:this.vel.z};
 		
 		this.attackIndx = (this.attackIndx+1)%1;
 
-		//if()
+
+		let attackDir = vectorNormalize(this.lookDir);
+		console.log(angleBetweenVectors(vector(1,0), this.lookDir));
+		for(var i=0; i<enemies.length; i++){
+			
+			let e = enemies[i];
+			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 1)), 0.8).isCollides){
+				
+				e.setDamage({value:randomRange(2,4)});
+			}
+		}
 	}
 	
 	update(dt) 
@@ -69,7 +79,7 @@ class Player extends Living
 		//anim
 		if(!this.isActing){
 
-			if(vectorLength({x:this.dir.x, y:this.dir.y, z:0}) == 0){
+			if(vectorMagnitude({x:this.dir.x, y:this.dir.y, z:0}) == 0){
 
 				this.sprite.pos = [0,0];	this.sprite.size = [32,32]
 			}else{
@@ -79,7 +89,7 @@ class Player extends Living
 		
 		var tm = 1;
 		if(!this.isActing)
-			tm = vectorLength({x:this.dir.x*this.speed, y:this.dir.y*this.speed, z:0})/this.speed;
+			tm = vectorMagnitude({x:this.dir.x*this.speed, y:this.dir.y*this.speed, z:0})/this.speed;
 		
 		this.timer -= dt * tm;
 		if(this.timer<=0){
@@ -108,7 +118,6 @@ class Player extends Living
 		
 		//Movement
 		//this.lastDir = this.dir;
-		
 		
 		var newPos = {
 			x: this.pos.x + this.vel.x * dt, 

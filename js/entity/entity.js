@@ -29,12 +29,8 @@ class Entity
   
 	remove()
 	{
-		/*var index = entities.indexOf(this);
-		if (index > -1) 
-		{
-			entities.splice(index, 1);
-		}*/
-		entities.remove(this);
+		var index = entities.indexOf(this);
+		if (index > -1)	entities.splice(index, 1);
 	}
 
 	move(){
@@ -84,7 +80,7 @@ class Living extends Entity
 
 	setDamage(dmg){
 		this.health -= dmg.value;
-		
+
 		if(this.health <= 0)
 			this.death();
 

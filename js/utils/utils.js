@@ -19,7 +19,7 @@ function boxCollides(pos, size, pos2, size2) {
 function collidesCircles(posA, rA, posB, rB){
 
 	var direction = vectorDir(posA, posB)
-	var overlap = vectorLength(direction) - (rA + rB);
+	var overlap = vectorMagnitude(direction) - (rA + rB);
 	
 	var normal = vectorNormalize(direction);
 	//B.position += direction * overlap
@@ -109,7 +109,7 @@ function reflectVector(dir, normal) {
 	return dir;*/
 }
 
-dotProduct = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
+
 
 function posInBounds(pos, size){
 	return Math.round(pos.x) >= 0 && Math.round(pos.x) < size.w &&
@@ -183,31 +183,56 @@ function nearest(value, min, max, steps) {
 	return zerone * (max - min) + min;
 }
 
-function vectorDir(v1, v2) 
-{
-    return {x:v2.x-v1.x, y:v2.y-v1.y, z:v2.z-v1.z};
+//Vector functions
+function vector(x=0,y=0,z=0){
+	return {x:x||0, y:y||0, z:z||0}
 }
 
-function vectorLength(v)
+function vector(v={x:0,y:0,z:0}){
+	return {x:v.x||0, y:v.y||0, z:v.z||0}
+}
+
+function vectorAdd(v1, v2) 
 {
-	return Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+    return {x:v2.x+v1.x, y:v2.y+v1.y, z:v2.z+v1.z};
+}
+
+function vectorSubstract(v1, v2) 
+{
+    return {x:v1.x-v2.x, y:v1.y-v2.y, z:v1.z-v2.z};
+}
+
+function vectorMultiply(v, m) 
+{
+    return {x:(v.x*m || 0), y:(v.y*m || 0), z:(v.z*m || 0)};
+}
+
+function vectorDot(v1, v2) {
+	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
+}
+
+function vectorEquals(v1, v2){
+	return (v1.x === v2.x) && (v1.y === v2.y) && (v1.z === v2.z);
+}
+
+function vectorMagnitude(v)
+{
+	return Math.sqrt((v.x*v.x || 0) + (v.y*v.y || 0) + (v.z*v.z || 0));
 }
 
 function vectorNormalize(v)
 {
-	var l = vectorLength(v);
+	var l = vectorMagnitude(v);
 	l = Math.abs(l);
 	if(l==0) return {x:0, y:0, z:0};
 	return {x: v.x/l, y: v.y/l, z: v.z/l};
 }
 
-
-
 function vectorLerp(v1, v2, t)
 {
-	return [Math.lerp(v1[0], v2[0], t),
-			Math.lerp(v1[1], v2[1], t),
-			Math.lerp(v1[2], v2[2], t)];
+	return {x:Math.lerp(v1.x, v2.x, t),
+			y:Math.lerp(v1.y, v2.y, t),
+			z:Math.lerp(v1.z, v2.z, t)};
 }
 
 function vectorRotate(v, ang)
@@ -222,11 +247,34 @@ function vectorRotate(v, ang)
 	};
 };
 
-function Distance(a, b)
+function angleBetweenVectors(v1, v2)
 {
-	return Math.sqrt( Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2) + Math.pow(a[2] - b[2],2) );
+	//var firstAngle = Math.atan2(v1.x, v1.y);
+	//var secondAngle = Math.atan2(v2.x, v2.y);
+
+	//var angleRad = secondAngle - firstAngle;
+
+	let dot = (p1, p2)=>  p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
+	let magSq = ({x, y, z}) => x ** 2 + y ** 2 + z ** 2;
+
+	let angleRad = Math.acos(dot(v1, v2) / Math.sqrt(magSq(v1) * magSq(v2)));
+
+	var angle = angleRad * 180 / Math.PI;
+
+	return angle;
 }
 
+function Distance(a, b)
+{
+	return vectorMagnitude(vectorDir(a,b));
+}
+
+function vectorDir(v1, v2) 
+{
+    return vectorSubstract(v2, v1);
+}
+
+//Math functions
 (function()
 {
 	Math.clamp = function(a,b,c)
@@ -241,6 +289,8 @@ function Distance(a, b)
 		return value1 + (value2 - value1) * amount;
 	}
 })();
+
+dotProduct = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
 
 
 //COROUTINES

@@ -6,7 +6,7 @@ var gameStarted = false
 //
 
 
-var skeletons = [];
+var enemies = [];
 var goldCount = 0;
 
 var entities = [];
@@ -37,7 +37,7 @@ function getEntitiesToCollideWith(pos)
 	es = []
 	for(var i=0; i<entities.length; i++){
 		var e = entities[i];
-		if(vectorLength(vectorDir(pos, e.pos)) < 2)
+		if(vectorMagnitude(vectorDir(pos, e.pos)) < 2)
 			es.push(e)
 	}
 	return es;
@@ -65,7 +65,7 @@ var level = {
 		for(var i=0; i<3; i++) {
 			let s = new Skeleton();
 			s.health = randomRange(1, s.maxHealth);
-			skeletons.push(s);
+			enemies.push(s);
 		}
 		
 		
@@ -132,6 +132,10 @@ var level = {
 				};
 
 				player.dir = dir;
+				
+				if(!vectorEquals(dir, vector()))
+					
+					player.lookDir = dir
 			}
 				
 				
@@ -231,12 +235,15 @@ var level = {
 
 
 		//Enemy health bar
-		for(var i=0; i<skeletons.length; i++){
-			let pos = WorldToIsometric(skeletons[i].pos);
+		for(var i=0; i<enemies.length; i++){
+			let e = enemies[i];
+			if(!e.alive) return;
+			
+			let pos = WorldToIsometric(e.pos);
 			
 			let ws = 15;
 			DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws, 2, "rgba(50, 50, 50, 1)");
-			let w = skeletons[i].health / skeletons[i].maxHealth;
+			let w = Math.clamp(e.health / e.maxHealth, 0, 1);
 			DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws * w, 2, "rgba(250, 50, 50, 1)");
 		}
 
