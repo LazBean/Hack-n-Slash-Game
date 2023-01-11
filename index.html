@@ -3,42 +3,13 @@
 <head>
 	<meta charset = "utf-8" />
 	<title>Game Canvas</title>
-	<style>
-		*{padding: 0; margin: 0;}
-		html, body 
-		{
-			margin: 0; 
-			padding: 0; 
-			background-color: #151515;
-		}
-		canvas 
-		{ 
-			background: #eee; 
-			display: block; 
-			margin: 100px auto; 
-			
-			width: 80%;
-  			height: 40%;
-			  
-			image-rendering: -moz-crisp-edges;
-			image-rendering: -webkit-crisp-edges;
-			image-rendering: pixelated;
-			image-rendering: crisp-edges;
-			
-		}
-		@font-face{
-			font-family:"pixelfont";
-			src:url('pixelfont.ttf');
-			font-smooth: never;
-			-webkit-font-smoothing : none;
-		}
-		
-	</style>	
+	
+	<link rel="stylesheet" href="css/style.css">
 
 </head>
 <body>
 
-	<canvas id="myCanvas" width="256" height="256" oncontextmenu="return false"></canvas> 
+	<canvas id="myCanvas" oncontextmenu="return false"></canvas> 
 
 
 	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
