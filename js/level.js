@@ -4,13 +4,11 @@ var debugMode = false;
 var cursorTilePos = {x:0,y:0,z:0};
 var gameStarted = false
 //
-
-
-var enemies = [];
-var goldCount = 0;
-
 var entities = [];
 var particles = [];
+
+var enemies = [];
+var enemiesSpawnTimer = 0;
 
 var mapData = [
 	[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -31,6 +29,12 @@ var mapData = [
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
 ];
 
+//???
+var dmgParticles = [];
+
+var t = 0
+var sliderValue = 0.8;
+
 // better try quadtree to optimize
 function getEntitiesToCollideWith(pos)
 {
@@ -43,13 +47,11 @@ function getEntitiesToCollideWith(pos)
 	return es;
 }
 
-var t = 0
-var sliderValue = 0.8;
+
 
 var level = {
     
 	map: tilemap,
-	
 	
 	//UPDATE
 	start: function() {
@@ -62,16 +64,6 @@ var level = {
 		gameStarted = true;
 		player = new Player()
 
-		for(var i=0; i<3; i++) {
-			let s = new Skeleton();
-			s.health = randomRange(1, s.maxHealth);
-			enemies.push(s);
-		}
-		
-		
-		//new Skeleton();
-		//new Skeleton();
-		//new Skeleton();
 
 		
 		for(var i=0; i<entities.length; i++) {
@@ -102,6 +94,19 @@ var level = {
 		for(var i=0; i<particles.length; i++) {
 			particles[i].update(dt);
 		}
+
+		//Spawn Enemies
+		if(enemies.length <= 3 && enemiesSpawnTimer<=0){
+
+			for(var i=0; i<randomRange(1,3); i++) {
+				let s = new Skeleton();
+				s.health = randomRange(1, s.maxHealth);
+				enemies.push(s);
+			}
+			//
+			enemiesSpawnTimer = randomFRange(5, 20);
+		}
+		enemiesSpawnTimer -= dt;
 		
 		
 		//Player controller
@@ -209,8 +214,24 @@ var level = {
 		}
 
 		
-		
-		
+		//???
+		//dmgParticles
+		for(var i=0; i<dmgParticles.length; i++){
+			let e = dmgParticles[i];
+			if(e.t<=0){
+				var index = dmgParticles.indexOf(e);
+				if (index > -1)	dmgParticles.splice(index, 1);
+				continue;
+			} 
+			
+			e.pos = vectorAdd(e.pos, vectorMultiply(e.dir, 0.05) );
+			//e.pos.z += 1.2;
+			let pos = WorldToIsometric(e.pos);
+
+			DrawText(pos.x-camera.x-15/2, pos.y+pos.z-camera.y+30, e.dmg, "rgba(200, 10, 10, 1)");
+			
+			e.t -= 0.01;
+		}
 		
 		
 

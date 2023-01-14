@@ -17,15 +17,7 @@ class Player extends Living
 		this.lookDir = {x:1, y:0, z:0};
 		
 		
-		this.timer = 0;
-		this.curFrame = 0;
-		
-		this.curAnim = [0,1,2,3,4,5,6,7];
-		
-		this.curAction = ``;
-		this.isActing = false;
 
-		this.actionTimer = 0;
 		this.lastDir = {x:0, y:0, z:0};
 		this.attackIndx = 0;
 
@@ -40,7 +32,7 @@ class Player extends Living
 		this.curAction = `jump`;
 		this.actionTimer = 0.8;
 
-		this.curFrame = 0;
+		this.curAnimFrame = 0;
 		this.sprite.pos = [0,64];	this.sprite.size = [32,32]
 	}
 
@@ -52,7 +44,7 @@ class Player extends Living
 		this.curAction = `attack`;
 		this.actionTimer = 0.8;
 
-		this.curFrame = 0;
+		this.curAnimFrame = 0;
 		this.sprite.pos = [0,96 + 32*this.attackIndx];	this.sprite.size = [48,32]
 		
 		this.vel = {x:0, y:0, z:this.vel.z};
@@ -61,13 +53,24 @@ class Player extends Living
 
 
 		let attackDir = vectorNormalize(this.lookDir);
-		console.log(angleBetweenVectors(vector(1,0), this.lookDir));
+		
+		console.log(angleBetweenVectors(vector(1,0), this.lookDir));	//???
+
 		for(var i=0; i<enemies.length; i++){
 			
 			let e = enemies[i];
 			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 1)), 0.8).isCollides){
 				
-				e.setDamage({value:randomRange(2,4)});
+				let dmg = {value:randomRange(2,4)}
+				e.setDamage(dmg);
+
+				//dmg particle (mb change it to some kind of damage log data)
+				dmgParticles.push({
+					pos:e.pos, 
+					dir:vectorNormalize(vectorSubstract(e.pos, this.pos)),
+					dmg:dmg.value, 
+					t:0.2
+				})
 			}
 		}
 	}
@@ -76,42 +79,25 @@ class Player extends Living
 	{
 		super.update(dt);
 		
-		//anim
+
+		//Speedup animation speed base on velocity
+		this.animMul = (!this.isActing)? vectorMagnitude({x:this.dir.x*this.speed, y:this.dir.y*this.speed, z:0})/this.speed : 1;
+
+		
+
+		
 		if(!this.isActing){
-
 			if(vectorMagnitude({x:this.dir.x, y:this.dir.y, z:0}) == 0){
-
+				//idle anim
 				this.sprite.pos = [0,0];	this.sprite.size = [32,32]
 			}else{
+				//walk anim
 				this.sprite.pos = [0,32];	this.sprite.size = [32,32]
 			}
 		}
-		
-		var tm = 1;
-		if(!this.isActing)
-			tm = vectorMagnitude({x:this.dir.x*this.speed, y:this.dir.y*this.speed, z:0})/this.speed;
-		
-		this.timer -= dt * tm;
-		if(this.timer<=0){
-			this.curFrame = (this.curFrame+1)%this.curAnim.length;
-			this.sprite.frames = [this.curAnim[this.curFrame]];
-			this.timer = 0.1;
-		}
+
 		
 
-		//sprite direction
-		let look = vectorRotate(this.dir, -45);
-		if(look.x > 0)
-			this.sprite.scaleX = 1;
-		else if(look.x < 0)
-			this.sprite.scaleX = -1;
-		
-		if(this.actionTimer <= 0){
-			this.isActing = false;
-			this.curAction = ``;
-		}
-
-		this.actionTimer -= dt;
 
 		
 		
@@ -178,13 +164,13 @@ class Player extends Living
 		if(!isColliding)
 			this.pos = newPos;
 		else{
-			var newPos = {
+			/*var newPos = {
 				x: this.pos.x + this.vel.x * dt, 
 				y: this.pos.y + this.vel.y * dt,
 				z: this.pos.z + this.vel.z * dt,
 			};
 
-			this.pos = newPos;
+			this.pos = newPos;*/
 		}
 			
 		this.collision();	
@@ -217,11 +203,11 @@ class Player extends Living
 		sPos.y += 16
 		let sSprite = new Sprite('res/slash.png', [0, 0], [48, 32],0,[0,1,2,3]);
 		//slash
-		renderData.push({
+		/*renderData.push({
 			pos: sPos,
 			sprite: sSprite,
 			depth: -(this.pos.y+this.pos.x)*10+1,
-		});
+		});*/
 
 	}
 }
