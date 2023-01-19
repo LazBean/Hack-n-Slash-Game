@@ -59,7 +59,7 @@ class Player extends Living
 		for(var i=0; i<enemies.length; i++){
 			
 			let e = enemies[i];
-			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 1)), 0.8).isCollides){
+			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 1)), 0.5).isCollides){
 				
 				let dmg = {value:randomRange(2,4)}
 				e.setDamage(dmg);
@@ -71,6 +71,10 @@ class Player extends Living
 					dmg:dmg.value, 
 					t:0.2
 				})
+
+				//???
+				let p = new ParticleSystem();
+				p.pos = vectorAdd(e.pos, vector(0,0,1));
 			}
 		}
 	}

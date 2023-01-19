@@ -28,6 +28,7 @@ resources.load([
 	'res/font.png',
 	'res/player.png',
 	'res/skeleton.png',
+	'res/particles.png',
 	'res/misc.png',
 	'res/slash.png',
 ]);

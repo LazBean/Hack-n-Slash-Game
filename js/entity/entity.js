@@ -11,6 +11,8 @@ class Entity
 		this.pos = {x:0, y:0, z:0};
 		this.vel = {x:0, y:0, z:0};
 		this.dir = {x:0, y:0, z:0};
+
+		this.collide = true;
 		
 		entities.push(this);
 	}
@@ -41,6 +43,9 @@ class Entity
 		es = getEntitiesToCollideWith(this.pos);
 		for(var i=0; i<es.length; i++) {
 			var e = es[i];
+
+			if(e.collide == false) continue;
+
 			var hit = collidesCircles(this.pos, 0.3, e.pos, 0.3);
 			if(hit.isCollides){
 				this.pos = {
