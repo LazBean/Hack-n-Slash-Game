@@ -62,7 +62,7 @@ class ParticleSystem extends Entity
 		
 		let p = new Particle(this);
 		p.lifeTimer = randomFRange(this.lifeTime/2,this.lifeTime); 
-
+		//
 		let vel = {x: randomFRange(-1,1)*0.1, y:randomFRange(-1,1)*0.1, z:10}
 		vel = vectorMultiply( vectorNormalize(vel), randomFRange(0.5,5.5));
 		p.vel = vel;
