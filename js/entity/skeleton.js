@@ -5,7 +5,7 @@ class Skeleton extends Living
 	constructor(name) 
 	{
 		super(name);
-		
+
 		this.speed = randomFRange(0.1,2);
 		this.dir = {x:0, y:0, z:0};
 		this.pos = {x:4 + randomFRange(0,8), y:4 + randomFRange(0,8), z:0};

@@ -29,9 +29,13 @@ class Particle //extends Entity
 		this.pos = vectorAdd(this.pos, this.vel);	//
 		this.vel = vectorLerp(this.vel, {x:0, y:0, z:-2}, 0.1)
 
-		if(this.pos.z <= 0 && this.vel.z < 0)
+		if(this.pos.z <= 0 && this.vel.z < 0){
 			this.pos.z = 0.01;
 			//this.vel.z *= -1;
+			this.manager.onParticleCollision(this);
+			this.remove();
+		}
+			
 
 		this.time += dt;
 
@@ -46,9 +50,7 @@ class Particle //extends Entity
 
 	render(ctx){
 
-		this.sprite.offset = [0,0];
-
-		let np = vectorAdd(this.pos, this.manager.pos);
+		let np = vectorAdd(this.pos, {x:0,y:0,z:0}); //vectorAdd(this.pos, this.manager.pos);
 		
 		renderData.push({
 			pos: WorldToIsometric(np),
@@ -56,6 +58,7 @@ class Particle //extends Entity
 			depth: -(np.y+np.x)*10+5,
 		});
 
+		if(this.pos.z <=0) return;
 		np.z = 0;
 		//shadow
 		renderData.push({

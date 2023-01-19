@@ -51,7 +51,6 @@ class Player extends Living
 		
 		this.attackIndx = (this.attackIndx+1)%1;
 
-
 		let attackDir = vectorNormalize(this.lookDir);
 		
 		console.log(angleBetweenVectors(vector(1,0), this.lookDir));	//???
@@ -59,9 +58,9 @@ class Player extends Living
 		for(var i=0; i<enemies.length; i++){
 			
 			let e = enemies[i];
-			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 1)), 0.5).isCollides){
+			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 0.5)), 0.8).isCollides){
 				
-				let dmg = {value:randomRange(2,4)}
+				let dmg = {value:randomRange(8,20)}
 				e.setDamage(dmg);
 
 				//dmg particle (mb change it to some kind of damage log data)
@@ -74,7 +73,10 @@ class Player extends Living
 
 				//???
 				let p = new ParticleSystem();
+				p.dir = vectorNormalize(vectorSubstract(e.pos, this.pos));
 				p.pos = vectorAdd(e.pos, vector(0,0,1));
+
+				audio.play("res/audio/death.wav");
 			}
 		}
 	}
@@ -83,7 +85,6 @@ class Player extends Living
 	{
 		super.update(dt);
 		
-
 		//Speedup animation speed base on velocity
 		this.animMul = (!this.isActing)? vectorMagnitude({x:this.dir.x*this.speed, y:this.dir.y*this.speed, z:0})/this.speed : 1;
 
@@ -187,18 +188,20 @@ class Player extends Living
 
 		
 		
-		//console.log(this.pos);
+		let renderPos = this.pos;
 		renderData.push({
-			pos: WorldToIsometric(this.pos),
+			pos: WorldToIsometric(renderPos),
 			sprite: this.sprite,
-			depth: -(this.pos.y+this.pos.x)*10+5,
+			depth: -(renderPos.y+renderPos.x)*10+5,
 		});
 
+		
 		//shadow
+		renderPos.z = 0;
 		renderData.push({
-			pos: WorldToIsometric(this.pos),
+			pos: WorldToIsometric(renderPos),
 			sprite: new Sprite('res/misc.png', [0, 0], [16, 8],0,[0]),
-			depth: -(this.pos.y+this.pos.x)*10+1,
+			depth: -(renderPos.y+renderPos.x)*10+1,
 		});
 		
 

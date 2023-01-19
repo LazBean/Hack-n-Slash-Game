@@ -7,6 +7,7 @@ var gameStarted = false
 var entities = [];
 var particles = [];
 
+
 var enemies = [];
 var enemiesSpawnTimer = 0;
 
@@ -31,6 +32,7 @@ var mapData = [
 
 //???
 var dmgParticles = [];
+var enemiesHpBar = [];
 
 var t = 0
 var sliderValue = 0.8;
@@ -100,7 +102,8 @@ var level = {
 
 			for(var i=0; i<randomRange(1,3); i++) {
 				let s = new Skeleton();
-				s.health = randomRange(1, s.maxHealth);
+				s.maxHealth = 40;
+				s.health = randomRange(s.maxHealth/2, s.maxHealth);
 				enemies.push(s);
 			}
 			//
@@ -198,6 +201,10 @@ var level = {
 	
 	onGUI: function(ctx){
 	
+		for(var i=0; i<entities.length; i++) {
+			entities[i].onGUI(ctx);
+		}
+
 		//Control tips
 		DrawText(10, 20, 'move - WASD' + '   attack - E' + '   dodge - SPACE', "rgba(160, 160, 160, 1)");
 		
@@ -228,7 +235,7 @@ var level = {
 			//e.pos.z += 1.2;
 			let pos = WorldToIsometric(e.pos);
 
-			DrawText(pos.x-camera.x-15/2, pos.y+pos.z-camera.y+30, e.dmg, "rgba(200, 10, 10, 1)");
+			DrawText(pos.x-camera.x-15/2, pos.y+pos.z-camera.y+30, ""+e.dmg, "rgba(200, 10, 10, 1)");
 			
 			e.t -= 0.01;
 		}
@@ -253,20 +260,6 @@ var level = {
 			let pos = WorldToIsometric(p.pos)
 			DrawText(pos.x-camera.x-(p.name.length*6/2), pos.y-camera.y+40, p.name, (p.color != undefined)? p.color :"rgba(160, 160, 160, 1)");
 		})
-
-
-		//Enemy health bar
-		for(var i=0; i<enemies.length; i++){
-			let e = enemies[i];
-			if(!e.alive) return;
-			
-			let pos = WorldToIsometric(e.pos);
-			
-			let ws = 15;
-			DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws, 2, "rgba(50, 50, 50, 1)");
-			let w = Math.clamp(e.health / e.maxHealth, 0, 1);
-			DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws * w, 2, "rgba(250, 50, 50, 1)");
-		}
 
 		
 		//Draw oval under Player
