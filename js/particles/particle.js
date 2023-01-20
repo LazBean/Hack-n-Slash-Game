@@ -7,7 +7,7 @@ class Particle //extends Entity
 
 		this.manager = manager;
 
-		this.sprite = new Sprite('res/particles.png', [0, 0], [8, 8], 4, [0,0,0,0]);
+		
 
 		this.speed = 1;
 		this.pos = {x:0, y:0, z:0};
@@ -33,7 +33,6 @@ class Particle //extends Entity
 			this.pos.z = 0.01;
 			//this.vel.z *= -1;
 			this.manager.onParticleCollision(this);
-			this.remove();
 		}
 			
 

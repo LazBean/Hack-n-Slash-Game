@@ -60,23 +60,16 @@ class Player extends Living
 			let e = enemies[i];
 			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 0.5)), 0.8).isCollides){
 				
-				let dmg = {value:randomRange(8,20)}
+				let dmg = {value:randomRange(8,20), dir:vectorNormalize(vectorSubstract(e.pos, this.pos))}
 				e.setDamage(dmg);
 
 				//dmg particle (mb change it to some kind of damage log data)
 				dmgParticles.push({
 					pos:e.pos, 
-					dir:vectorNormalize(vectorSubstract(e.pos, this.pos)),
+					dir:dmg.dir,
 					dmg:dmg.value, 
 					t:0.2
 				})
-
-				//???
-				let p = new ParticleSystem();
-				p.dir = vectorNormalize(vectorSubstract(e.pos, this.pos));
-				p.pos = vectorAdd(e.pos, vector(0,0,1));
-
-				audio.play("res/audio/death.wav");
 			}
 		}
 	}
@@ -186,8 +179,6 @@ class Player extends Living
 	{
 		this.sprite.offset = [0,16];
 
-		
-		
 		let renderPos = this.pos;
 		renderData.push({
 			pos: WorldToIsometric(renderPos),

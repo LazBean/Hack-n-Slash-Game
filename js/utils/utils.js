@@ -184,6 +184,11 @@ function nearest(value, min, max, steps) {
 }
 
 //Vector functions
+/**
+     * Does something nifty.
+     * @param   whatsit  The whatsit to use (or whatever).
+     * @returns (x:0, y:0, z:0) container.
+     */
 function vector(x=0,y=0,z=0){
 	return {x:x||0, y:y||0, z:z||0}
 }

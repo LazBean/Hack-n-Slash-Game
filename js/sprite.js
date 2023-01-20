@@ -1,5 +1,6 @@
 
 (function() {
+    
     function Sprite(url, pos, size, speed, frames, scaleX, angle, dir) {
         this.pos = pos;
         this.size = size;

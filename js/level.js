@@ -100,14 +100,26 @@ var level = {
 		//Spawn Enemies
 		if(enemies.length <= 3 && enemiesSpawnTimer<=0){
 
-			for(var i=0; i<randomRange(1,3); i++) {
+			for(var i=0; i<randomRange(1,5); i++) {
 				let s = new Skeleton();
+				//Spawn Point
+				let sPos = {x: randomFRange(-1,1), y:randomFRange(-1,1), z:0}
+				sPos = vectorMultiply( vectorNormalize(sPos), randomFRange(5.0, 6.0));
+				sPos = vectorAdd(sPos, {x:this.map.width/2, y:this.map.height/2, z:0});
+				s.pos = sPos;
+
 				s.maxHealth = 40;
-				s.health = randomRange(s.maxHealth/2, s.maxHealth);
+				s.health = s.maxHealth;
+				let r = randomFRange(0,1);
+				if(r > 0.70){
+					s.health = randomRange(s.maxHealth/2, s.maxHealth);
+				}
+				
+
 				enemies.push(s);
 			}
 			//
-			enemiesSpawnTimer = randomFRange(5, 20);
+			enemiesSpawnTimer = randomFRange(5, 10);
 		}
 		enemiesSpawnTimer -= dt;
 		
@@ -141,9 +153,8 @@ var level = {
 
 				player.dir = dir;
 				
-				if(!vectorEquals(dir, vector()))
-					
-					player.lookDir = dir
+				if(!vectorEquals(dir, vector(0,0,0)))			
+					player.lookDir = dir;
 			}
 				
 				

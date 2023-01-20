@@ -130,6 +130,7 @@ class Living extends Entity
 	onGUI(ctx) 
 	{
 		//Health bar
+		if(this.health >= this.maxHealth) return;
 		let pos = WorldToIsometric(this.pos);
 			
 		let ws = 15;
@@ -148,7 +149,7 @@ class Living extends Entity
 
 	setDamage(dmg){
 		this.health -= dmg.value;
-		this.onGetDamage();
+		this.onGetDamage(dmg);
 		if(this.health <= 0)
 			this.death();
 

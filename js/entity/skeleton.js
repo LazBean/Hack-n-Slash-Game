@@ -8,7 +8,7 @@ class Skeleton extends Living
 
 		this.speed = randomFRange(0.1,2);
 		this.dir = {x:0, y:0, z:0};
-		this.pos = {x:4 + randomFRange(0,8), y:4 + randomFRange(0,8), z:0};
+		this.pos = {x:0, y:0, z:0};
 		this.sprite = new Sprite('res/skeleton.png', [0, 64], [32, 32], 8, [0,1,2,3,4,5,6,7]);
 		
 		this.timer = 0;
@@ -38,6 +38,14 @@ class Skeleton extends Living
 				//walk anim
 				this.sprite.pos = [0,32];	this.sprite.size = [32,32]; this.curAnim = [0,1,2,3];
 			}
+
+			//Attack target
+			let dirToTarget = vectorSubstract(player.pos, this.pos);
+			let distToTarget = vectorMagnitude(dirToTarget);
+			if(distToTarget <= 0.8){
+				this.lookDir = vectorNormalize(dirToTarget);
+				this.attack();
+			}
 		}
 		
 		
@@ -62,7 +70,6 @@ class Skeleton extends Living
 			}
 			
 			var graph = new Graph(tiles);
-			console.log()
 			if(
 				posInBounds(this.pos, {w:level.map.width, h:level.map.height}) &&
 				posInBounds(player.pos, {w:level.map.width, h:level.map.height})
@@ -83,16 +90,17 @@ class Skeleton extends Living
 			this.timer = 5;
 		}
 
-		if(this.path.length > 0){
-			//console.log(this.path)
+		//move along path
+		if(this.path.length > 0 && this.curAction == ""){
 			var vd = {x:this.path[0].x-this.pos.x, y:this.path[0].y-this.pos.y, z:this.dir.z};
 			var d = vectorMagnitude(vd)
 			this.dir = vectorNormalize(vd)
 
 			if(d <= 0.5)
 				this.path.shift()
-
-				
+		}
+		else{
+			this.dir = vector(0,0,0);
 		}
 		
 		//this.dir = {x: 1, y:0, z:0}
@@ -121,23 +129,39 @@ class Skeleton extends Living
 		this.actionTimer = 0.8;
 
 		this.curAnimFrame = 0;
-		this.sprite.pos = [0,96 + 32*this.attackIndx];	this.sprite.size = [48,32]; this.sprite.frames = [0,1,2,3,4,5,6,7];
+		this.sprite.pos = [0,64];	this.sprite.size = [32,32];
 		
 		this.vel = {x:0, y:0, z:this.vel.z};
 		
 		this.attackIndx = (this.attackIndx+1)%1;
 
-
-		let attackDir = vectorNormalize(this.lookDir);
 		
-		console.log(angleBetweenVectors(vector(1,0), this.lookDir));	//???
+		let attackDir = vectorNormalize(this.lookDir);
 
 		for(var i=0; i<enemies.length; i++){
 			
 			let e = enemies[i];
-			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 1)), 0.8).isCollides){
+			if(e == this) continue;
+
+			if(collidesCircles(e.pos, 0.3, vectorAdd(this.pos, vectorMultiply(attackDir, 0.5)), 0.8).isCollides){
 				
-				e.setDamage({value:randomRange(2,4)});
+				let dmg = {value:randomRange(6,10), dir:vectorNormalize(vectorSubstract(e.pos, this.pos))}
+				e.setDamage(dmg);
+
+				//dmg particle (mb change it to some kind of damage log data)
+				dmgParticles.push({
+					pos:e.pos, 
+					dir:dmg.dir,
+					dmg:dmg.value, 
+					t:0.2
+				})
+
+				//???
+				let p = new ParticleSystem();
+				p.dir = vectorNormalize(vectorSubstract(e.pos, this.pos));
+				p.pos = vectorAdd(e.pos, vector(0,0,1));
+
+				audio.play("res/audio/death.wav");
 			}
 		}
 	}
@@ -147,6 +171,11 @@ class Skeleton extends Living
 
 		var index = enemies.indexOf(this);
 		if (index > -1)	enemies.splice(index, 1);
+
+		//???
+		let p = new PSAsh();//ParticleSystem();
+		//p.dir = dmg.dir;
+		p.pos = vectorAdd(this.pos, vector(0,0,1));
 
 		super.remove();
 	}
@@ -160,6 +189,13 @@ class Skeleton extends Living
 
 		this.curAnimFrame = 0;
 		this.sprite.pos = [0,96];	this.sprite.size = [32,32];	this.sprite.frames = [0];
+
+		//???
+		let p = new PSBlood();//ParticleSystem();
+		p.dir = dmg.dir;
+		p.pos = vectorAdd(this.pos, vector(0,0,1));
+
+		audio.play("res/audio/death.wav");
 	}
 
 	render(ctx)
