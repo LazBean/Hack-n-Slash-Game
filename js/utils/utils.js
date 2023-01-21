@@ -212,6 +212,11 @@ function vectorMultiply(v, m)
     return {x:(v.x*m || 0), y:(v.y*m || 0), z:(v.z*m || 0)};
 }
 
+function vectorMultiplyVector(a, b) 
+{
+    return {x:(a.x*b.x || 0), y:(a.y*b.y || 0), z:(a.z*b.z || 0)};
+}
+
 function vectorDot(v1, v2) {
 	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
 }

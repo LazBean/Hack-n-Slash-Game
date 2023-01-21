@@ -144,11 +144,14 @@ var level = {
 			dir = vectorRotate(dir, 45);
 			dir = vectorNormalize(dir);
 
+			///???
+			//dir.z = player.vel.z;
+
 			if(!player.isActing){
 				player.vel = {
 					x:dir.x * player.speed, 
 					y:dir.y * player.speed, 
-					z:dir.z,
+					z:player.vel.z,
 				};
 
 				player.dir = dir;
@@ -241,12 +244,11 @@ var level = {
 				if (index > -1)	dmgParticles.splice(index, 1);
 				continue;
 			} 
-			
 			e.pos = vectorAdd(e.pos, vectorMultiply(e.dir, 0.05) );
 			//e.pos.z += 1.2;
 			let pos = WorldToIsometric(e.pos);
 
-			DrawText(pos.x-camera.x-15/2, pos.y+pos.z-camera.y+30, ""+e.dmg, "rgba(200, 10, 10, 1)");
+			DrawText(pos.x-camera.x-15/2, pos.y-camera.y+30, ""+e.dmg, "rgba(200, 10, 10, 1)");
 			
 			e.t -= 0.01;
 		}

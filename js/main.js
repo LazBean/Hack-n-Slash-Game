@@ -194,7 +194,7 @@ function renderEntity(e){
 	if(e==null || e.sprite==null) return;
 
 	ctx.save();
-	ctx.translate(Math.round(e.pos.x+e.sprite.offset[0]-camera.x), canvas.height-Math.round((e.pos.y+e.pos.z)+e.sprite.offset[1]-camera.y));
+	ctx.translate(Math.round(e.pos.x+e.sprite.offset[0]-camera.x), canvas.height-Math.round((e.pos.y)+e.sprite.offset[1]-camera.y));
 
 	e.sprite.render(ctx);
 	ctx.restore();

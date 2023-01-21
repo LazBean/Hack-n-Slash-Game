@@ -156,11 +156,6 @@ class Skeleton extends Living
 					t:0.2
 				})
 
-				//???
-				let p = new ParticleSystem();
-				p.dir = vectorNormalize(vectorSubstract(e.pos, this.pos));
-				p.pos = vectorAdd(e.pos, vector(0,0,1));
-
 				audio.play("res/audio/death.wav");
 			}
 		}
@@ -173,7 +168,7 @@ class Skeleton extends Living
 		if (index > -1)	enemies.splice(index, 1);
 
 		//???
-		let p = new PSAsh();//ParticleSystem();
+		let p = new PSAsh();
 		//p.dir = dmg.dir;
 		p.pos = vectorAdd(this.pos, vector(0,0,1));
 
@@ -191,7 +186,7 @@ class Skeleton extends Living
 		this.sprite.pos = [0,96];	this.sprite.size = [32,32];	this.sprite.frames = [0];
 
 		//???
-		let p = new PSBlood();//ParticleSystem();
+		let p = new PSBlood();
 		p.dir = dmg.dir;
 		p.pos = vectorAdd(this.pos, vector(0,0,1));
 

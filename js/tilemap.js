@@ -18,7 +18,8 @@ function FromIsometricToScreen(pos) {
 }
 
 function WorldToIsometric(pos) {
-	var nPos = {x:(pos.x - pos.y) * TILE_WIDTH_HALF, y:(pos.x + pos.y) * TILE_HEIGHT_HALF, z:pos.z};
+	var nPos = {x:(pos.x - pos.y) * TILE_WIDTH_HALF, y: (pos.x + pos.y) * TILE_HEIGHT_HALF + pos.z * TILE_HEIGHT};
+	//var nPos = {x:(pos.x - pos.y) * Math.cos(30*(3.18/180)), y:pos.z + (pos.x + pos.y) * Math.sin(30*(3.18/180)), z:pos.z};
     return nPos;
 }
 

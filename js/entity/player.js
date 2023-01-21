@@ -32,6 +32,9 @@ class Player extends Living
 		this.curAction = `jump`;
 		this.actionTimer = 0.8;
 
+		//this.vel.z = 3
+		//this.vel = {x:0, y:0, z:100};
+
 		this.curAnimFrame = 0;
 		this.sprite.pos = [0,64];	this.sprite.size = [32,32]
 	}
@@ -53,7 +56,7 @@ class Player extends Living
 
 		let attackDir = vectorNormalize(this.lookDir);
 		
-		console.log(angleBetweenVectors(vector(1,0), this.lookDir));	//???
+		//console.log(angleBetweenVectors(vector(1,0), this.lookDir));	//???
 
 		for(var i=0; i<enemies.length; i++){
 			
@@ -78,7 +81,7 @@ class Player extends Living
 	{
 		super.update(dt);
 		
-		//Speedup animation speed base on velocity
+		//Speed up animation speed base on velocity
 		this.animMul = (!this.isActing)? vectorMagnitude({x:this.dir.x*this.speed, y:this.dir.y*this.speed, z:0})/this.speed : 1;
 
 		
@@ -95,13 +98,11 @@ class Player extends Living
 		}
 
 		
-
-
-		
 		
 		
 		//Movement
 		//this.lastDir = this.dir;
+		this.vel = vectorLerp(this.vel, {x:0, y:0, z:-10}, dt);
 		
 		var newPos = {
 			x: this.pos.x + this.vel.x * dt, 
@@ -170,6 +171,8 @@ class Player extends Living
 
 			this.pos = newPos;*/
 		}
+
+		
 			
 		this.collision();	
 		this.pos.z = Math.clamp(this.pos.z,0,999);
@@ -179,7 +182,7 @@ class Player extends Living
 	{
 		this.sprite.offset = [0,16];
 
-		let renderPos = this.pos;
+		let renderPos = vector(this.pos);
 		renderData.push({
 			pos: WorldToIsometric(renderPos),
 			sprite: this.sprite,

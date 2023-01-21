@@ -1,13 +1,10 @@
-class Particle //extends Entity 
+
+class Particle
 {
 
 	constructor(manager) 
 	{
-		//super("");
-
 		this.manager = manager;
-
-		
 
 		this.speed = 1;
 		this.pos = {x:0, y:0, z:0};
@@ -25,9 +22,14 @@ class Particle //extends Entity
 		//this.pos.z = r * (this.time * 10)
 
 		
+		//Movement
+		this.pos = vectorAdd(this.pos, vectorMultiply(this.vel, dt));	//
 
-		this.pos = vectorAdd(this.pos, this.vel);	//
-		this.vel = vectorLerp(this.vel, {x:0, y:0, z:-2}, 0.1)
+		//this.vel = vector(this.manager.volLinear);
+		let vol = vectorAdd( vector(this.manager.volLinear), {x:0, y:0, z:-10})
+
+		this.vel = vectorLerp(this.vel, vol, dt)
+
 
 		if(this.pos.z <= 0 && this.vel.z < 0){
 			this.pos.z = 0.01;
@@ -49,7 +51,7 @@ class Particle //extends Entity
 
 	render(ctx){
 
-		let np = vectorAdd(this.pos, {x:0,y:0,z:0}); //vectorAdd(this.pos, this.manager.pos);
+		let np = vector(this.pos); //vectorAdd(this.pos, this.manager.pos);
 		
 		renderData.push({
 			pos: WorldToIsometric(np),
