@@ -180,7 +180,7 @@ class Skeleton extends Living
 
 		this.isActing = true;
 		this.curAction = `hurt`;
-		this.actionTimer = 0.1;
+		this.actionTimer = (this.actionTimer > 0.1)? this.actionTimer : 0.1;
 
 		this.curAnimFrame = 0;
 		this.sprite.pos = [0,96];	this.sprite.size = [32,32];	this.sprite.frames = [0];

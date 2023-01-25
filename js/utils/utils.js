@@ -257,21 +257,29 @@ function vectorRotate(v, ang)
 	};
 };
 
-function angleBetweenVectors(v1, v2)
+function angleBetweenVectors(a, b)
 {
-	//var firstAngle = Math.atan2(v1.x, v1.y);
-	//var secondAngle = Math.atan2(v2.x, v2.y);
-
-	//var angleRad = secondAngle - firstAngle;
-
+	
 	let dot = (p1, p2)=>  p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
+	let det = a.x*b.y - a.y*b.x; //only for 2D
+
+	let angleRad = Math.atan2(det, dot(a, b));
+
+	var angle = angleRad * 180 / Math.PI;
+	/*if(angle < 0){
+		angle += 360;
+	}*/
+
+	return angle;
+
+	/*let dot = (p1, p2)=>  p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
 	let magSq = ({x, y, z}) => x ** 2 + y ** 2 + z ** 2;
 
 	let angleRad = Math.acos(dot(v1, v2) / Math.sqrt(magSq(v1) * magSq(v2)));
 
 	var angle = angleRad * 180 / Math.PI;
 
-	return angle;
+	return angle;*/
 }
 
 function Distance(a, b)

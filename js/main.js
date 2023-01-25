@@ -27,6 +27,7 @@ resources.load([
 	'res/gui.png',
 	'res/font.png',
 	'res/player.png',
+	'res/playerW.png',
 	'res/skeleton.png',
 	'res/particles.png',
 	'res/misc.png',

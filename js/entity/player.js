@@ -16,7 +16,7 @@ class Player extends Living
 		this.dir = {x:0, y:0, z:0};
 		this.lookDir = {x:1, y:0, z:0};
 		
-		
+		this.weaponSprite = new Sprite('res/playerW.png', [0, 0], [32, 32], 8, [0,1,2,3,4,5,6,7]);
 
 		this.lastDir = {x:0, y:0, z:0};
 		this.attackIndx = 0;
@@ -176,6 +176,14 @@ class Player extends Living
 			
 		this.collision();	
 		this.pos.z = Math.clamp(this.pos.z,0,999);
+
+		//
+		this.weaponSprite.update(dt);
+		if(this.animTimer<=0){
+			//this.curAnimFrame = (this.curAnimFrame+1)%this.weaponSprite.frames.length;
+			this.weaponSprite.frames = [this.weaponSprite.frames[this.curAnimFrame]];
+			//this.animTimer = 0.1;
+		}
 	}
 
 	render(ctx)
@@ -187,6 +195,55 @@ class Player extends Living
 			pos: WorldToIsometric(renderPos),
 			sprite: this.sprite,
 			depth: -(renderPos.y+renderPos.x)*10+5,
+		});
+
+		//Weapon rendering
+		let wPos = vector(this.pos);
+		
+		
+
+		let mousePos = mouse;
+		let screenCenter = {x:canvas.width/2, y:canvas.height/2, z:0};
+		let distFromCenterToMouse = vectorSubstract(mousePos, screenCenter);
+		let distFromCenterToMouseNormalized = vectorNormalize( distFromCenterToMouse);
+		
+		let a = angleBetweenVectors({x:1,y:0,z:0}, distFromCenterToMouseNormalized)
+		a *= -1;
+		
+		
+
+		//direction
+		let look = vectorRotate(this.dir, -45);
+		this.weaponSprite.scaleX = (look.x < 0)? -1 : 1;
+
+
+		if(this.weaponSprite.scaleX < 0){
+			//a *= -1;
+			a -= 180;
+		}
+		
+		
+		if(a < 0){
+			a += 360;
+		}
+		
+		//console.log(a);	
+
+		if(this.curAction == `attack`){
+			this.weaponSprite.pos = [0,32];	this.weaponSprite.size = [48,32]; this.weaponSprite.frames = [0,1,2,3,4,5,6,7]
+		}else{
+			this.weaponSprite.pos = [0,0];	this.weaponSprite.size = [32,32]; this.weaponSprite.frames = [0]
+			this.weaponSprite.angle = a
+		}
+		this.weaponSprite.offset = [0,8];
+		
+
+		
+		
+		renderData.push({
+			pos: WorldToIsometric(wPos),
+			sprite: this.weaponSprite,
+			depth: -(renderPos.y+renderPos.x)*10+ ((look.y > 0)? 6 : 4),
 		});
 
 		

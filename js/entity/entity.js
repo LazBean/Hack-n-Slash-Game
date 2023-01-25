@@ -87,7 +87,7 @@ class Living extends Entity
 		this.animTimer = 0;
 		this.animMul = 1;
 		this.curAnimFrame = 0;
-		this.curAnim = [0,1,2,3,4,5,6,7];
+		this.curAnim = [0,1,2,3,4,5,6,7];	//[7,6,5,4,3,2,1,0]
 
 		//ActionState
 		this.curAction = ``;
