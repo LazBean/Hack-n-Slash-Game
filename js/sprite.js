@@ -14,6 +14,8 @@
 		this.once = false;
 		this.rect = [0,0,0,0];
 		this.offset = [0,0];
+
+        this.animator = new SpriteAnimator();
     };
 
     Sprite.prototype = {
@@ -70,13 +72,6 @@
             //dWidth = Ширина изображения
             //sx = X верхнего левого угла фрагмента, который будет вырезан
             //sWidth = Ширина фрагмента, который будет вырезан из изображения источника
-
-            
-            //var pix = img.data;
-
-            //for (var i = 0, n = pix.length; i < n; i += 4) {
-                //console.log(pix[i+3])
-            //}
             
             
 
@@ -87,9 +82,69 @@
 				dx, dy,
 				this.size[0] + cut[2], this.size[1] + cut[3]);
 						  
-			//ctx.globalCompositeOperation = "blend";
+
         }
     };
 
     window.Sprite = Sprite;
 })();
+
+
+
+
+
+
+class SpriteAnimation
+{
+	constructor(name, frames, loop, lifetime) 
+	{
+        this.name = name || '';
+        this.loop = loop || false;
+        this.frames = frames || [0];
+        
+        this.lifetime = lifetime || frames.length*0.1;
+	}
+}
+
+
+class SpriteAnimator
+{
+	constructor(animations) 
+	{
+        this._frame = 0;
+		this._timer = 0;
+
+        this.speed = 1;
+
+        this.animations = animations || [];
+
+		this.curAnimation = (this.animations.length>0)? animations[0] : undefined;
+	}
+	
+	update(dt) {
+		if(this._timer>=1){
+            let anim = this.curAnimation;
+
+			this._frame = (this._frame+1)%anim.length;
+			this.sprite.frames = [anim[this._frame]];
+			this._timer = 0.1;
+
+            if(anim.loop == true){
+
+            }else{
+
+            }
+		}
+		this._timer += dt * this.animMul;
+	}
+
+    getCurrentFrame(){
+        let anim = this.curAnimation;
+        if(anim == undefined) return 0;
+        return anim[this._frame];
+    }
+
+}
+
+
+

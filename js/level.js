@@ -7,6 +7,10 @@ var gameStarted = false
 var entities = [];
 var particles = [];
 
+var maxDecales = 100;
+var decales = [];
+
+
 
 var enemies = [];
 var enemiesSpawnTimer = 0;
@@ -122,6 +126,8 @@ var level = {
 			enemiesSpawnTimer = randomFRange(5, 10);
 		}
 		enemiesSpawnTimer -= dt;
+
+		//
 		
 		
 		//Player controller
@@ -230,8 +236,15 @@ var level = {
 		//Coins
 		//GUIDrawTextSprite("GOLD:"+goldCount, 100, canvas.height-4);
 
+		
+
+
 		if(debugMode){
 			DrawText(mouse.x + 10, mouse.y-10, cursorTilePos.x+', '+cursorTilePos.y, "rgba(160, 160, 160, 1)");
+
+			DrawText(10, canvas.height-40, "Entities: " + entities.length, "rgba(160, 160, 160, 1)");
+			//Decales
+			DrawText(10, canvas.height-50, "Decales: " + decales.length, "rgba(160, 160, 160, 1)");
 		}
 
 		

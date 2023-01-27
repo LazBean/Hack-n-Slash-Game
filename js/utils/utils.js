@@ -257,18 +257,20 @@ function vectorRotate(v, ang)
 	};
 };
 
+
+/**
+ 	* Calculate angle between 2D vectors
+    * @param  object in \{ x:0, y:0, z:0 \} format.
+    * @returns value in range(-180, 180).
+*/    
 function angleBetweenVectors(a, b)
 {
-	
-	let dot = (p1, p2)=>  p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
+	let dot = (p1, p2)=>  p1.x * p2.x + p1.y * p2.y;
 	let det = a.x*b.y - a.y*b.x; //only for 2D
 
 	let angleRad = Math.atan2(det, dot(a, b));
 
 	var angle = angleRad * 180 / Math.PI;
-	/*if(angle < 0){
-		angle += 360;
-	}*/
 
 	return angle;
 
