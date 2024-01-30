@@ -6,8 +6,8 @@ var ctx = canvas.getContext("2d");
 //canvas.style.width = "1024px";
 //canvas.style.height = "512px";
 
-canvas.width = 1024-256;
-canvas.height = 512-128;
+canvas.width = 768; //1024-256;
+canvas.height = 432; //512-128;
 
 
 document.body.appendChild(canvas);
@@ -133,8 +133,8 @@ function onGUI(ctx){
 	
 	level.onGUI(ctx);
 
-	// let sprite = new Sprite('res/bg-main-menu.png', [0,  0], [canvas.width, canvas.height]);
-	// GUIDrawSprite(0, canvas.height, sprite);
+	let sprite = new Sprite('res/bg-main-menu.png', [0,  0], [canvas.width, canvas.height]);
+	GUIDrawSprite(0, canvas.height, sprite);
 
 	//DrawUI();
 	
