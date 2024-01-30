@@ -199,8 +199,6 @@ class Player extends Living
 
 		//Weapon rendering
 		let wPos = vector(this.pos);
-		
-		
 
 		let mousePos = mouse;
 		let screenCenter = {x:canvas.width/2, y:canvas.height/2, z:0};
@@ -209,16 +207,12 @@ class Player extends Living
 		
 		let a = angleBetweenVectors({x:1,y:0,z:0}, distFromCenterToMouseNormalized)
 		a *= -1;
-		
-		
 
 		//direction
 		let look = vectorRotate(this.dir, -45);
 		this.weaponSprite.scaleX = (look.x < 0)? -1 : 1;
 
-
 		if(this.weaponSprite.scaleX < 0){
-			//a *= -1;
 			a -= 180;
 		}
 		
@@ -227,7 +221,7 @@ class Player extends Living
 			a += 360;
 		}
 		
-		//console.log(a);	
+		// console.log(look);	
 
 		if(this.curAction == `attack`){
 			this.weaponSprite.pos = [0,32];	this.weaponSprite.size = [48,32]; this.weaponSprite.frames = [0,1,2,3,4,5,6,7]
@@ -236,9 +230,6 @@ class Player extends Living
 			this.weaponSprite.angle = a
 		}
 		this.weaponSprite.offset = [0,8];
-		
-
-		
 		
 		renderData.push({
 			pos: WorldToIsometric(wPos),

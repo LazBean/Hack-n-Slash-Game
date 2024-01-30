@@ -23,6 +23,7 @@ var camera = {x:-canvas.width/2, y:-canvas.height/4};
 
 //INIT RESOURCES
 resources.load([
+	'res/bg-main-menu.png',
 	'res/tiles.png',
 	'res/gui.png',
 	'res/font.png',
@@ -131,6 +132,9 @@ function render(){
 function onGUI(ctx){
 	
 	level.onGUI(ctx);
+
+	// let sprite = new Sprite('res/bg-main-menu.png', [0,  0], [canvas.width, canvas.height]);
+	// GUIDrawSprite(0, canvas.height, sprite);
 
 	//DrawUI();
 	
