@@ -57,6 +57,8 @@ var gameTime = 0;
 var lastTime;
 var dt;
 
+var currentScene = new Scene();
+
 //Init
 function init() {
   
@@ -81,12 +83,29 @@ function main() {
     requestAnimFrame(main);
 };
 
+
 //UPDATE
 function update(dt) {
     gameTime += dt;
+
+	currentScene.update(dt);
 		
 	level.update(dt);
 };
+
+//RENDER
+function render(){
+	DrawBox(0,canvas.height, canvas.width, canvas.height, "rgba(0, 0, 0, 1)");
+
+    // Render 
+	currentScene.render(ctx);
+	level.render(ctx);
+	
+	pushToRender();
+
+	onGUI(ctx);
+}
+
 
 //FPS COUNTER
 var fps   = 0;
@@ -111,21 +130,6 @@ function TakeFPS(dt)
 	//SHOW FPS
 	DrawBox(0,canvas.height,60,15, "rgba(0, 0, 0, 0.5)");
 	DrawText(5, canvas.height-3, 'FPS ' + fps.toFixed(2), "rgba(160, 160, 160, 1)");
-}
-
-
-
-
-//RENDER
-function render(){
-	DrawBox(0,canvas.height, canvas.width, canvas.height, "rgba(0, 0, 0, 1)");	//clear
-
-    // Render 
-	level.render(ctx);
-	
-	pushToRender();
-
-	onGUI(ctx);
 }
 
 

@@ -1,8 +1,6 @@
-class Component extends Object 
-{
-	constructor(name="?") 
-	{
-		super(name);
+class Component {
+	constructor(gameObject) {
+	  this.gameObject = gameObject;
 	}
          
 	update(dt) 

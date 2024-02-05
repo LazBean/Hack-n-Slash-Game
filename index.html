@@ -5,18 +5,15 @@
 	<title>Game Canvas</title>
 	
 	<link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
 
 	<canvas id="myCanvas" oncontextmenu="return false"></canvas> 
 
-
 	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 	<script>
-      // NOTE - INCLUDE YOUR FIREBASE CONFIG HERE FOR ANYTHING TO WORK:
       const firebaseConfig = {
         apiKey: "AIzaSyAVKuCEaXNr7VsNnxAM7Z6gGaFKksKYeZg",
 		authDomain: "hack-n-slash-game-multiplayer.firebaseapp.com",
@@ -29,36 +26,50 @@
       firebase.initializeApp(firebaseConfig);
 	</script>
 
+	<script>
+		const scriptPaths = [
+			"utils/vector3.js",
+			"utils/utils.js",
+			"utils/astar.js",
+			"utils/PerlinNoise.js",
 
-	<script type = "text/javascript" src = "./js/utils/vector3.js"></script>
-	<script type = "text/javascript" src = "./js/utils/utils.js"></script>
-	<script type = "text/javascript" src = "./js/utils/astar.js"></script>
+			"resources.js",
+			"sprite.js",
+			"gui.js",
+			"tilemap.js",
+			"ui.js",
+			"network.js",
 
-	<script type = "text/javascript" src = "./js/resources.js"></script>
-	<script type = "text/javascript" src = "./js/sprite.js"></script>
-	<script type = "text/javascript" src = "./js/gui.js"></script>
-	<script type = "text/javascript" src = "./js/tilemap.js"></script>
-	<script type = "text/javascript" src = "./js/ui.js"></script>
+			"entity/entity.js",
+			"entity/living.js",
+			"entity/decale.js",
+			"entity/player.js",
+			"entity/skeleton.js",
 
-	<script type = "text/javascript" src = "./js/network.js"></script>	
+			"particles/particle.js",
+			"particles/particleSystem.js",
 
-	<script type = "text/javascript" src = "./js/main.js"></script>
-	<script type = "text/javascript" src = "./js/input.js"></script>
-	<script type = "text/javascript" src = "./js/audio.js"></script>
-		
-	<script type = "text/javascript" src = "./js/entity/entity.js"></script>	  
-	<script type = "text/javascript" src = "./js/entity/player.js"></script>	
-	<script type = "text/javascript" src = "./js/entity/skeleton.js"></script>	
+			"core/component.js",
+			"core/gameobject.js",
+			"core/transform.js",
+			"core/scene.js",
 
-	<script type = "text/javascript" src = "./js/particles/particle.js"></script>
-	<script type = "text/javascript" src = "./js/particles/particleSystem.js"></script>
+			"level.js",
+			"main.js",
+			"input.js",
+			"audio.js",
+			"scenario.js",
+			"tilemap.js",
+		];
 
-	<script type = "text/javascript" src = "./js/level.js"></script>
-	<script type = "text/javascript" src = "./js/scenario.js"></script>
-	<script type = "text/javascript" src = "./js/tilemap.js"></script>
+		scriptPaths.forEach((scriptPath, index) => {
+			const script = document.createElement("script");
+			script.src = "./js/" + scriptPath;
+			script.async = false;
+			document.body.appendChild(script);
+		});
 
-	<script type = "text/javascript" src = "./js/utils/PerlinNoise.js"></script>
-
+	</script>
 
 </body>
 </html>
