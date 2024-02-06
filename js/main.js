@@ -103,6 +103,7 @@ function render(){
 	
 	pushToRender();
 
+	currentScene.onGUI(ctx);
 	onGUI(ctx);
 }
 

@@ -21,5 +21,9 @@ class Scene {
     render(ctx) {
       this.gameObjects.forEach(obj => obj.render(ctx));
     }
+
+    onGUI(ctx) {
+      this.gameObjects.forEach(obj => obj.onGUI(ctx));
+    }
   }
   
