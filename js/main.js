@@ -57,14 +57,17 @@ var gameTime = 0;
 var lastTime;
 var dt;
 
-var currentScene = new Scene();
+var currentScene;
 
 //Init
 function init() {
   
 	level.start();
-	
     lastTime = Date.now();
+
+	currentScene = new Scene();
+	currentScene.instantiate(new Human(100, 100));
+
     main();
 }
 

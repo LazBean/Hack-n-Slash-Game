@@ -1,12 +1,13 @@
 class GameObject {
-	constructor() {
-	  this.components = [];
-	  this.transform = new Transform();
+	constructor(name="GameObject") {
+		this.name = name;
+		this.components = [];
+		this.transform = new Transform();
 	}
   
 	addComponent(component) {
-	  this.components.push(component);
-	  component.gameObject = this;
+		this.components.push(component);
+		component.gameObject = this;
 	}
 
 	getComponent(type) {
@@ -14,11 +15,16 @@ class GameObject {
 	}
   
 	update(dt) {
-	  this.components.forEach(component => component.update(dt));
+	  	this.components.forEach(component => component.update(dt));
 	}
 
 	render(ctx) 
 	{
 		this.components.forEach(component => component.render(ctx));
+	}
+
+	onGUI(ctx) 
+	{
+		this.components.forEach(component => component.onGUI(ctx));
 	}
 }

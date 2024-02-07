@@ -5,11 +5,16 @@ class Component {
          
 	update(dt) 
 	{
-		super.update(dt);
+		
 	}
 
 	render(ctx) 
 	{
-		super.render(ctx);
+		
+	}
+
+	onGUI(ctx) 
+	{
+		
 	}
 }
