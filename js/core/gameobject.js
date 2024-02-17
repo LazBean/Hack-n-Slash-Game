@@ -1,8 +1,8 @@
 class GameObject {
-	constructor(name="GameObject") {
+	constructor(name = "GameObject", pos = {x:0, y:0, z:0}) {
 		this.name = name;
 		this.components = [];
-		this.transform = new Transform();
+		this.transform = new Transform(pos);
 	}
   
 	addComponent(component) {

@@ -1,40 +1,86 @@
+class Animation {
+  constructor(frames, frameRate=8, loop=true) {
+    this.frames = frames;
+    this.frameRate = frameRate;
+    this.loop = loop;
+  }
+}
+
+// animator.OnFrameChanged = (frameIndex) => {
+// 	console.log(`Switching frame to: ${frameIndex}`);
+// };
 class Animator extends Component {
-    constructor(gameObject, animations) {
-      super(gameObject);
-      this.animations = animations; // Словарь анимаций: {'walk': [0,1,2,3], 'attack': [4,5,6,7]}
-      this.currentAnimation = null;
+  constructor(animation) {
+    super();
+    this.animation = animation;
+    this.speed = 1;
+
+    this.currentFrameIndex = 0;
+    this.timer = 0;
+    this.isPlaying = false;
+  }
+
+  OnAnimationStart = null;
+  OnAnimationEnd = null;
+  OnFrameChanged = null;
+
+  play(animation = null) {
+    if (animation !== null) {
+      this.animation = animation;
       this.currentFrameIndex = 0;
-      this.timer = 0;
-      this.isPlaying = false;
+    } else if (!this.animation) {
+      console.error("Animator.play() called without an animation");
+      return;
     }
+
+    // this.speed = 1;
+    this.timer = 1 / (this.animation.frameRate * this.speed);
+    this.isPlaying = true;
   
-    play(animationName, frameRate) {
-      if (this.currentAnimation !== animationName) {
-        this.currentAnimation = animationName;
-        this.currentFrameIndex = 0;
-        this.timer = 1 / frameRate;
-        this.isPlaying = true;
-      }
-    }
+    this.updateFrame();
+    this.OnAnimationStart?.();
+  }
   
-    update(dt) {
-      if (!this.isPlaying || !(this.currentAnimation in this.animations)) return;
   
-      this.timer -= dt;
-      if (this.timer <= 0) {
-        this.currentFrameIndex = (this.currentFrameIndex + 1) % this.animations[this.currentAnimation].length;
-        this.timer = 1 / frameRate; // Предполагается, что frameRate определен глобально или передается другим способом
+
+  update(dt) {
+    if (!this.isPlaying || !this.animation) return;
   
-        // Обновляем текущий кадр спрайта
-        const spriteRenderer = this.gameObject.getComponent(SpriteRenderer);
-        if (spriteRenderer) {
-          spriteRenderer.sprite.frames = [this.animations[this.currentAnimation][this.currentFrameIndex]];
+    this.timer -= dt;
+    if (this.timer <= 0) {
+      
+      this.currentFrameIndex++;
+      if (this.currentFrameIndex >= this.animation.frames.length) {
+        if (this.animation.loop) {
+          this.currentFrameIndex = 0;
+        } else {
+          this.isPlaying = false;
+          this.currentFrameIndex = 0;
+          this.OnAnimationEnd?.();
+          return;
         }
       }
-    }
-  
-    stop() {
-      this.isPlaying = false;
+      this.timer = 1 / (this.animation.frameRate * this.speed);
+      this.updateFrame();
     }
   }
+
+  updateFrame() {
+    const spriteRenderer = this.gameObject.getComponent(SpriteRenderer);
+    if (spriteRenderer && this.animation.frames.length > 0) {
+      spriteRenderer.sprite = this.animation.frames[this.currentFrameIndex];
+      this.OnFrameChanged?.(this.currentFrameIndex);
+    }
+  }
+  
+  stop() {
+    this.isPlaying = false;
+    this.currentFrameIndex = 0;
+    this.OnAnimationEnd?.();
+  }
+
+  pause() {
+    this.isPlaying = false;
+  }
+}
   

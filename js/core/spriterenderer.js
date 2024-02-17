@@ -1,17 +1,26 @@
+
 class SpriteRenderer extends Component {
-    constructor(gameObject, sprite) {
-      super(gameObject);
+
+    constructor(sprite) {
+      super();
+      
       this.sprite = sprite;
+      this.depth = 0;
+      this.offset = [0,0];
+      this.flipX = false;
     }
   
     render(ctx) {
-      
+      this.sprite.offset = [0,0];
+
+      let renderPos = vector(this.gameObject.transform.position);
       renderData.push({
+        pos: WorldToIsometric(renderPos),
+        offset: this.offset,
         sprite: this.sprite,
-        pos: this.gameObject.transform.position,
-        
-        depth: this.depth || 0, 
+        depth: -(renderPos.y+renderPos.x)*10 + this.depth,
       });
+
     }
   }
   

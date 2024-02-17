@@ -276,8 +276,7 @@ var level = {
 		//DrawBox(300, 300, 100, 100, "rgba(50, 50, 50, 1)")
 		//GUIDrawSlicedSprite(300,300, xx, yy, panelSpritePack.sprites)
 		//DrawCircle(mouse.x, mouse.y,1)
-		DrawText(10, 50, 'Player Pos: ' + player.pos.x.toFixed(2) + ", " + player.pos.y.toFixed(2), "rgba(160, 160, 160, 1)");
-		DrawText(10, 40, 'Player Dir: ' + player.dir.x.toFixed(2) + ", " + player.dir.y.toFixed(2), "rgba(160, 160, 160, 1)");
+		
 		//
 
 		//Show players names

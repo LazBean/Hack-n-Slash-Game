@@ -1,8 +1,8 @@
 class Transform extends Component {
 
-	constructor() {
+	constructor(pos = {x:0, y:0, z:0}) {
 		super(null);
-		this.position = { x: 0, y: 0, z: 0 };
+		this.position = pos || {x:0, y:0, z:0};
 		this.rotation = 0;
 		this.scale = { x: 1, y: 1, z: 1 };
 	}

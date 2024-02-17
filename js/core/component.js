@@ -1,20 +1,20 @@
+
 class Component {
-	constructor(gameObject) {
-	  this.gameObject = gameObject;
+
+	constructor() {
+		this.gameObject = null;
+		this.enabled = true;
 	}
          
-	update(dt) 
-	{
+	update(dt) {
 		
 	}
 
-	render(ctx) 
-	{
+	render(ctx) {
 		
 	}
 
-	onGUI(ctx) 
-	{
+	onGUI(ctx) {
 		
 	}
 }

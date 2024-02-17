@@ -73,16 +73,13 @@
             //sx = X верхнего левого угла фрагмента, который будет вырезан
             //sWidth = Ширина фрагмента, который будет вырезан из изображения источника
             
-            
-
 			ctx.drawImage(
                 img,
 				x + cut[0], y + cut[1],
 				this.size[0] + cut[2] , this.size[1] + cut[3],
 				dx, dy,
-				this.size[0] + cut[2], this.size[1] + cut[3]);
-						  
-
+				this.size[0] + cut[2], this.size[1] + cut[3]
+            );
         }
     };
 

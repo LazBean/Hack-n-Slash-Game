@@ -1,4 +1,3 @@
-// =========================================================================
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
@@ -66,7 +65,7 @@ function init() {
     lastTime = Date.now();
 
 	currentScene = new Scene();
-	currentScene.instantiate(new Human(100, 100));
+	currentScene.instantiate(new Entity({x:0, y:0, z:0}));
 
     main();
 }
@@ -100,7 +99,6 @@ function update(dt) {
 function render(){
 	DrawBox(0,canvas.height, canvas.width, canvas.height, "rgba(0, 0, 0, 1)");
 
-    // Render 
 	currentScene.render(ctx);
 	level.render(ctx);
 	

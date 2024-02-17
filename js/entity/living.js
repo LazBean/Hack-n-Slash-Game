@@ -1,11 +1,9 @@
-class Living extends Entity 
-{
+class Living extends Entity {
 
-	constructor(name) 
-	{
-		super(name);
+    constructor() {
+      	super("Living");
 
-		this.maxHealth = 10;
+	  	this.maxHealth = 10;
 		this.health = this.maxHealth;
 		this.alive = true;
 
@@ -23,10 +21,28 @@ class Living extends Entity
 		this.curAction = ``;
 		this.isActing = false;
 		this.actionTimer = 0;
+    }
+
+	setDamage(dmg){
+		this.health -= dmg.value;
+		this.onGetDamage(dmg);
+		if(this.health <= 0)
+			this.death();
+
 	}
-	
+
+	onGetDamage(dmg){
+		this.guiTimer = 0;
+		return;
+	}
+
+	death(){
+		this.alive = false;
+	}
+
 	update(dt) {
 		super.update(dt);
+
 		//???
 		this.guiTimer = Math.clamp(this.guiTimer + dt, 0, 1) ;
 
@@ -59,6 +75,8 @@ class Living extends Entity
 
 	onGUI(ctx) 
 	{
+		super.onGUI(ctx);
+
 		//Health bar
 		if(this.health >= this.maxHealth) return;
 		let pos = WorldToIsometric(this.pos);
@@ -75,22 +93,5 @@ class Living extends Entity
 		DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws * w, 2, "rgba(250, 250, 250, 1)");
 
 		DrawBox(pos.x-camera.x-ws/2, pos.y-camera.y+30, ws * this.guiHealth, 2, "rgba(250, 50, 50, 1)");
-	}
-
-	setDamage(dmg){
-		this.health -= dmg.value;
-		this.onGetDamage(dmg);
-		if(this.health <= 0)
-			this.death();
-
-	}
-
-	onGetDamage(dmg){
-		this.guiTimer = 0;
-		return;
-	}
-
-	death(){
-		this.alive = false;
 	}
 }
