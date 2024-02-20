@@ -30,14 +30,15 @@ var tilemap = {
 	width: 0,
 	height: 0,
 	data: [,],
+	t: 0,
 	
 	sprites: [
 		new Sprite('res/tiles.png', [0, 0], [32, 16]),	 	//floor 0
 		new Sprite('res/tiles.png', [0, 16], [32, 16]), 	//floor 1
 		
-		new Sprite('res/tiles.png', [0, 32], [32, 32]),		//wall
+		new Sprite('res/tiles.png', [0, 32], [32, 32], [0.5, 0.75]),		//wall
 		
-		new Sprite('res/tiles.png', [32, 32], [32, 32]),	
+		new Sprite('res/tiles.png', [32, 32], [32, 32], [0.5, 0.75]),	
 	],
 	
 	create: function(w,h){
@@ -60,16 +61,15 @@ var tilemap = {
 	},
 	
 	render: function(ctx){
+		// this.t += dt * 30;
 		
 		for(var x=0; x<this.width; x++){
 			for(var y=0; y<this.height; y++){
 			
 				var tile = this.getTile(x,y);
 				
-				var offsetH = 0;
 				var offsDepth = -9;
 				if(tile > 1){
-					offsetH = 8;
 					offsDepth = 5;
 					/*renderData.push({
 						pos: [(x - y) * 16, (x + y) * 8 + offsetH+16, 0],
@@ -79,7 +79,6 @@ var tilemap = {
 				}
 
 				isoPos = WorldToIsometric({x:x, y:y, z:0});
-				isoPos.y += offsetH;	
 				
 				renderData.push({
 					pos: isoPos,

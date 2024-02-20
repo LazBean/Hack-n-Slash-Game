@@ -18,13 +18,32 @@ function DrawBox(x, y, w, h, color="rgba(100, 100, 100, 1)"){
 
 
 
-function GUIDrawSprite(x, y, sprite, cutRect){
-	ctx.save();
-	ctx.translate( Math.round(x+sprite.size[0]/2), canvas.height - Math.round(y-sprite.size[1]/2) );
-	sprite.rect = cutRect;
-	sprite.render(ctx);
-	ctx.restore();
+function GUIDrawSprite(x, y, sprite, cutRect) {
+    ctx.save();
+    // Устанавливаем начальную позицию для спрайта
+    ctx.translate(x, canvas.height - y);
+    
+    if (cutRect) {
+        // Если задана область обрезки, обновляем свойства спрайта
+        sprite.rect = {
+            x: cutRect.x || sprite.pos[0],
+            y: cutRect.y || sprite.pos[1],
+            width: cutRect.width || sprite.size[0],
+            height: cutRect.height || sprite.size[1]
+        };
+    }
+
+    // Отрисовываем спрайт без дополнительного смещения, так как оно уже учтено в translate
+    sprite.render(ctx, {
+        x: 0,
+        y: 0,
+        angle: 0,
+        scale: 1,
+        flipX: false
+    });
+    ctx.restore();
 }
+
 
 
 var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,:;!?"+

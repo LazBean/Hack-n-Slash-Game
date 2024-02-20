@@ -214,7 +214,7 @@ var level = {
 
 		renderData.push({
 			pos: WorldToIsometric(cursorTilePos),
-			sprite: new Sprite('res/tiles.png', [64, 0]  , [32, 16],0,[0], 0),
+			sprite: new Sprite('res/tiles.png', [64, 0], [32, 16]),
 			depth: 1000,
 		});
 	},
