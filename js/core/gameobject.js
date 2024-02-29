@@ -8,6 +8,7 @@ class GameObject {
 	addComponent(component) {
 		this.components.push(component);
 		component.gameObject = this;
+		return component;
 	}
 
 	getComponent(type) {
@@ -15,16 +16,26 @@ class GameObject {
 	}
   
 	update(dt) {
-	  	this.components.forEach(component => component.update(dt));
-	}
+        this.components.forEach(component => {
+            if (component.enabled !== false) {
+                component.update(dt);
+            }
+        });
+    }
 
-	render(ctx) 
-	{
-		this.components.forEach(component => component.render(ctx));
-	}
+    render(ctx) {
+        this.components.forEach(component => {
+            if (component.enabled !== false) {
+                component.render(ctx);
+            }
+        });
+    }
 
-	onGUI(ctx) 
-	{
-		this.components.forEach(component => component.onGUI(ctx));
-	}
+    onGUI(ctx) {
+        this.components.forEach(component => {
+            if (component.enabled !== false) {
+                component.onGUI(ctx);
+            }
+        });
+    }
 }
